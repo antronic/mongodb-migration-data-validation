@@ -1,0 +1,13 @@
+{
+  "scripts": {
+    "build": "rollup -c"
+  },
+  "type": "commonjs",
+  "devDependencies": {
+    "@mongosh/shell-api": "^2.3.3",
+    "@rollup/plugin-terser": "^0.4.4",
+    "@rollup/plugin-typescript": "^12.1.1",
+    "rollup": "^4.25.0",
+    "typescript": "^5.6.3"
+  }
+}
