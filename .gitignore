@@ -130,4 +130,4 @@ dist
 .pnp.*
 
 # hidden directory storing certifcates
-# .cert
+.cert
