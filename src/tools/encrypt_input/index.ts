@@ -4,20 +4,21 @@ import type { ReadlineInterface } from '..'
 dotenv.config()
 
 
-const keyInput = process.env.KEY
-const ivInput = process.env.IV
-
-if (keyInput === undefined || ivInput === undefined) {
-  console.error('Please provide a KEY and IV in the .env file')
-  process.exit(1)
-}
-
-// crypto.randomBytes(32).toString('hex')
-const KEY = Buffer.from(keyInput, 'hex')
-// crypto.randomBytes(16).toString('hex')
-const IV = Buffer.from(ivInput, 'hex')
+const keyInput = process.env.ENCRYPTION_KEY
+const ivInput = process.env.ENCRYPTION_IV
 
 function encryptPassword(rl: ReadlineInterface, callback: Function) {
+  if (keyInput === undefined || ivInput === undefined) {
+    console.error('Please provide a KEY and IV in the .env file')
+    process.exit(1)
+  }
+
+  // crypto.randomBytes(32).toString('hex')
+  const KEY = Buffer.from(keyInput, 'hex')
+  // crypto.randomBytes(16).toString('hex')
+  const IV = Buffer.from(ivInput, 'hex')
+
+
   // Encrypt the password
   function hashPassword(password: string) {
     const cipher = crypto.createCipheriv('aes-256-cbc', KEY, IV)

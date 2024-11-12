@@ -1,7 +1,8 @@
 {
   "scripts": {
     "build": "rollup -c",
-    "watch": "rollup -c -w"
+    "watch": "rollup -c -w",
+    "cli": "node dist/tools/index.js"
   },
   "type": "commonjs",
   "devDependencies": {
@@ -19,5 +20,28 @@
     "inquirer": "^12.1.0",
     "murmurhash": "^2.0.1",
     "zod": "^3.23.8"
-  }
+  },
+  "name": "mongodb-migration-data-validation",
+  "version": "1.0.0",
+  "description": "This script is designed to validate the data between AWS DocumentDB/MongoDB and MongoDB Atlas.",
+  "main": "dist/index.js",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/antronic/mongodb-migration-data-validation.git"
+  },
+  "keywords": [
+    "MongoDB",
+    "AWS",
+    "DocumentDB",
+    "Data",
+    "Validation",
+    "MongoDB",
+    "Migration"
+  ],
+  "author": "Jirchai Chansivanon <jirachai.c@mongodb.com>",
+  "license": "MPL-2.0",
+  "bugs": {
+    "url": "https://github.com/antronic/mongodb-migration-data-validation/issues"
+  },
+  "homepage": "https://github.com/antronic/mongodb-migration-data-validation#readme"
 }

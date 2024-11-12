@@ -1,7 +1,43 @@
 // dotenv
+import fs from 'fs'
+import crypto from 'crypto'
 import * as readLine from 'readline'
+
 import encryptPassword from './encrypt_input'
 import decryptPassword from './decrypt_input'
+
+export function generateKeyAndIV() {
+  const key = crypto.randomBytes(32)
+  const iv = crypto.randomBytes(16)
+
+  console.log('key:', key.toString('hex'))
+  console.log('iv:', iv.toString('hex'))
+
+  // Write to .env.example
+  const envPath = '.env'
+  const envFile = fs.readFileSync(envPath, 'utf8')
+  const newEnv = envFile + `\nENCRYPTION_KEY=${key.toString('hex')}\nENCRYPTION_IV=${iv.toString('hex')}\n`
+  fs.writeFileSync('.env', newEnv)
+
+  console.log('Key and IV written to .env')
+}
+
+
+if (process.argv[2] === 'generate-key') {
+  generateKeyAndIV()
+  process.exit(0)
+}
+
+function keyCheck() {
+  const keyInput = process.env.ENCRYPTION_KEY
+  const ivInput = process.env.ENCRYPTION_IV
+
+  if (keyInput === undefined || ivInput === undefined) {
+    console.error('Please provide a KEY and IV in the .env file')
+    console.error('or run the command:\n$\tnpm run cli generate-key')
+    process.exit(1)
+  }
+}
 
 export interface ReadlineInterface extends readLine.Interface {
   stdoutMuted?: boolean;
@@ -78,9 +114,8 @@ export interface ReadlineInterface extends readLine.Interface {
       console.log('Have a great day!')
       process.exit
     })
-
-
   }
 
+  keyCheck()
   listAvailbleFunctions()
 })()
