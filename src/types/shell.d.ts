@@ -58,17 +58,23 @@ type Collection = {
 }
 
 type Database = {
+  adminCommand: AdminCommandFunction
   getCollectionNames: () => string[]
   getCollection: (name: string) => Collection
+  getSiblingDB: (name: string) => Database
 }
+
+// Mongosh API
+// https://www.mongodb.com/docs/manual/reference/method/
 
 declare global {
   const db: {
     adminCommand: AdminCommandFunction
+  } & Database
 
-    getCollection: (name: string) => Collection
-    getSiblingDB: (name: string) => Database
-  }
+  // Connect
+  // Create a new connection and return the Database object. Usage: connect(URI, username [optional], password [optional])
+  const connect: (uri: string, username?: string, password?: string) => Database
 
   const print: (message: string) => void
 }
