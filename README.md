@@ -101,4 +101,4 @@ Sample screenshots:
 ## Disclaimer
 This software is not supported by MongoDB, Inc. under any of their commercial support subscriptions or otherwise. Any usage of these script is at your own risk.
 
-For any change requests or issues, it may require a MongoDB Professional Services engagement and mandate. Please contact your MongoDB Professional Services representative for any further questions.
+For any additional change requests or issues arising after the Professional Services engagement, a new MongoDB Professional Services engagement may be required. Please contact your MongoDB Professional Services representative for further assistance.
