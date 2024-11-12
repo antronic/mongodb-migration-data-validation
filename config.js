@@ -2,7 +2,7 @@ const config = {
   target: {
     hostname: 'localhost:29001',
     username: 'observer',
-    encryptedPassword: 'b4a726ad9fa610a121de5e34431b43f1'
+    encryptedPassword: 'c425c6bec211d2e0c9d37185a4c22ede'
   },
   listMode: 'include',
   databases: [
@@ -11,7 +11,7 @@ const config = {
       isExclude: false,
       listMode: 'exclude',
       collections: [],
-      collectionDefination: [
+      collectionDefinition: [
         {
           name: 'transactions_1',
           options: {
@@ -29,7 +29,7 @@ const config = {
       isExclude: false,
       listMode: 'exclude',
       collections: [],
-      collectionDefination: [],
+      collectionDefinition: [],
     },
   ]
 }

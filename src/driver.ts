@@ -102,7 +102,7 @@ const start = (config: Validation.ValidationConfig) => {
       // Get all collection options
       const collectionOptions = new Map<string, Validation.CollectionOptions>()
       // Get all collection definations
-      const collectionDefs = dbConfig && dbConfig.collectionDefination || []
+      const collectionDefs = dbConfig && dbConfig.collectionDefinition || []
       // Exclude collection options filter from excludedCollections and set to Map
       collectionDefs.forEach(colDef => sourceCollections.includes(colDef.name) && collectionOptions.set(colDef.name, colDef.options))
 

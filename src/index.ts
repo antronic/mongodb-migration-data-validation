@@ -1,5 +1,4 @@
 import dotenv from 'dotenv'
-dotenv.config()
 // dotenv.config({ override: true })
 import start from './driver'
 import { Validation } from './types/validation'
@@ -7,13 +6,18 @@ import { Validation } from './types/validation'
 
 // Command line interface
 (function() {
+  dotenv.config({ override: true })
+
+  // console.log('test')
   const config = require('./config.js')
+  // console.log('config')
+  // console.log(config)
 
   // const config: Validation.ValidationConfig = {
   //   target: {
   //     hostname: 'localhost:29001',
   //     username: 'observer',
-  //     encryptedPassword: 'b4a726ad9fa610a121de5e34431b43f1'
+  //     encryptedPassword: 'c425c6bec211d2e0c9d37185a4asdc22edes'
   //   },
   //   listMode: 'include',
   //   databases: [
@@ -22,7 +26,7 @@ import { Validation } from './types/validation'
   //       isExclude: false,
   //       listMode: 'exclude',
   //       collections: [],
-  //       collectionDefination: [
+  //       collectionDefinition: [
   //         {
   //           name: 'transactions_1',
   //           options: {
@@ -40,7 +44,7 @@ import { Validation } from './types/validation'
   //       isExclude: false,
   //       listMode: 'exclude',
   //       collections: [],
-  //       collectionDefination: [],
+  //       collectionDefinition: [],
   //     },
   //   ]
   // }

@@ -58,11 +58,11 @@ export namespace Validation {
     collections: string[]
 
     /**
-     * List of defination collections
+     * List of definition collections
      *
      * Explain the collections name, options: hasTTL, timeField
      */
-    collectionDefination: Collection[]
+    collectionDefinition: Collection[]
   }
   type Connection = {
     /**

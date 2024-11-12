@@ -3,8 +3,8 @@ import crypto from 'crypto'
 import { type ReadlineInterface } from '..'
 dotenv.config({ override: true })
 
-const keyInput = process.env.DATA_VALIDATION_ENCRYPTION_KEY
-const ivInput = process.env.DATA_VALIDATION_ENCRYPTION_IV
+const keyInput = process.env.ENCRYPTION_KEY
+const ivInput = process.env.ENCRYPTION_IV
 // const keyInput = 'b32d828c57918319aecf36646cc573d5c074d27e368816cf205ba81b18a67f02'
 // const ivInput = '5d912769988d6781a1e16ffd197d5395'
 

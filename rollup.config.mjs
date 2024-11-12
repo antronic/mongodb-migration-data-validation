@@ -24,13 +24,13 @@ export default [
       format: 'cjs',
       exports: 'auto',
     },
-    external: ['../config.cjs', 'dotenv'],
+    external: ['./config.js', 'dotenv'],
     plugins: [
       typescript({
         target: "ES2019", // Ensures compatibility with mongosh and Node environments
         module: "esnext",
       }),
-      treser(),
+      // treser(),
     ],
   },
 ]
