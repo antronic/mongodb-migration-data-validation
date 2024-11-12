@@ -24,6 +24,7 @@ export default [
       format: 'cjs',
       exports: 'auto',
     },
+    external: ['../config.cjs', 'dotenv'],
     plugins: [
       typescript({
         target: "ES2019", // Ensures compatibility with mongosh and Node environments
@@ -31,5 +32,5 @@ export default [
       }),
       treser(),
     ],
-  }
+  },
 ]

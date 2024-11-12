@@ -1,11 +1,11 @@
 import dotenv from 'dotenv'
 import crypto from 'crypto'
 import type { ReadlineInterface } from '..'
-dotenv.config()
+dotenv.config({ override: true })
 
 
-const keyInput = process.env.ENCRYPTION_KEY
-const ivInput = process.env.ENCRYPTION_IV
+const keyInput = process.env.DATA_VALIDATION_ENCRYPTION_KEY
+const ivInput = process.env.DATA_VALIDATION_ENCRYPTION_IV
 
 function encryptPassword(rl: ReadlineInterface, callback: Function) {
   if (keyInput === undefined || ivInput === undefined) {

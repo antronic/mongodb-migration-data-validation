@@ -14,9 +14,10 @@ export function generateKeyAndIV() {
   console.log('iv:', iv.toString('hex'))
 
   // Write to .env.example
-  const envPath = '.env'
-  const envFile = fs.readFileSync(envPath, 'utf8')
-  const newEnv = envFile + `\nENCRYPTION_KEY=${key.toString('hex')}\nENCRYPTION_IV=${iv.toString('hex')}\n`
+  // const envPath = '.env'
+  // const previousContent = fs.readFileSync(envPath, 'utf8')
+  const previousContent = '\n# Encryption key and IV\n'
+  const newEnv = previousContent + `\nDATA_VALIDATION_ENCRYPTION_KEY=${key.toString('hex')}\nDATA_VALIDATION_ENCRYPTION_IV=${iv.toString('hex')}\n`
   fs.writeFileSync('.env', newEnv)
 
   console.log('Key and IV written to .env')
@@ -29,8 +30,8 @@ if (process.argv[2] === 'generate-key') {
 }
 
 function keyCheck() {
-  const keyInput = process.env.ENCRYPTION_KEY
-  const ivInput = process.env.ENCRYPTION_IV
+  const keyInput = process.env.DATA_VALIDATION_ENCRYPTION_KEY
+  const ivInput = process.env.DATA_VALIDATION_ENCRYPTION_IV
 
   if (keyInput === undefined || ivInput === undefined) {
     console.error('Please provide a KEY and IV in the .env file')

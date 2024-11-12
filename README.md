@@ -18,6 +18,13 @@ It is designed to be run on a local machine that can connect to both AWS Documen
 ## Usage
 1. Before you run the script, you need to **encrypt your TARGET (MongoDB Atlas) password** with my encryption script.
 
+If you don't have the ENCRYPTION_KEY and ENCRYPTION_IV, you can generate them by running the following command
+```bash
+npm run cli generate-key
+```
+
+After you have the ENCRYPTION_KEY and ENCRYPTION_IV, you can run the encryption script by running the following command
+
 ```bash
 npm run cli
 ```
@@ -38,6 +45,19 @@ Select a function:
 4. Copy the encrypted password and save it in the `config.js` file
 
 
+Sample Output:
+```bash
+Enter your password:
+
+
+##################################
+Encrypted password:
+----------------------------------
+
+3b49ca2bc0cb298577e175cf02148b32
+
+##################################
+```
 
 ## Disclaimer
 This software is not supported by MongoDB, Inc. under any of their commercial support subscriptions or otherwise. Any usage of these script is at your own risk.
