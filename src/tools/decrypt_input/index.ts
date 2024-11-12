@@ -17,13 +17,21 @@ const KEY = Buffer.from(keyInput, 'hex')
 // crypto.randomBytes(16).toString('hex')
 const IV = Buffer.from(ivInput, 'hex')
 
+export const decryptContent = (content: string, key: Buffer = KEY, iv: Buffer = IV) => {
+  const decipher = crypto.createDecipheriv('aes-256-cbc', key, iv)
+  let decrypted = decipher.update(content, 'hex', 'utf8')
+  decrypted += decipher.final('utf8')
+
+  return decrypted
+}
+
 function decryptPassword(rl: ReadlineInterface, callback: Function) {
   // Receive input from the user
   rl.stdoutMuted = false
 
   rl.setPrompt('Enter your encrypted string: ')
-
   rl.prompt()
+
   rl._writeToOutput = function _writeToOutput(stringToWrite: string) {
       if (rl.stdoutMuted) {
           rl.output?.write('')
@@ -40,10 +48,8 @@ function decryptPassword(rl: ReadlineInterface, callback: Function) {
     rl.stdoutMuted = false
     // rl.write('Return back to main menu?')
 
-    const decipher = crypto.createDecipheriv('aes-256-cbc', KEY, IV)
-    let decrypted = decipher.update(line, 'hex', 'utf8')
-    decrypted += decipher.final('utf8')
-    const decryptedPassword = decrypted
+    // Decrypt the password
+    const decryptedPassword = decryptContent(line)
 
 
     console.log()
