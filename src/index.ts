@@ -1,33 +1,45 @@
-import readLine from 'readline'
-import crypto from 'crypto'
+import start from './driver'
+import { connectTarget } from './modules/connect'
+import { Validation } from './types/validation'
+// import { loadSourceData, loadTargetData } from './modules/load-data'
 
 // Command line interface
 (function() {
-
-  function encryptPassword(password: string) {
-    const rl = readLine.createInterface({
-      input: process.stdin,
-      output: process.stdout
-    })
-
-    // Convert to SHA-256
-    const hash = crypto.createHash('sha256')
-    hash.update(password)
-    return hash.digest('hex')
+  const config: Validation.ValidationConfig = {
+    target: {
+      hostname: 'localhost:29001',
+      username: 'observer',
+      encryptedPassword: '42f6fdcd56a9f2c3de49bdf97b1eb9cc'
+    },
+    listMode: 'include',
+    databases: [
+      {
+        name: 'jirac',
+        isExclude: false,
+        listMode: 'exclude',
+        collections: [],
+        collectionDefination: [
+          {
+            name: 'transactions_1',
+            options: {
+              maximumDocumentsPerRound: 100,
+              // hasTTL: true,
+              // timeField: 'created_at',
+              // expireAfterSeconds: 60 * 60 * 24 * 30,
+              // indexName: 'created_at_1',
+            },
+          },
+        ],
+      },
+      {
+        name: 'test',
+        isExclude: false,
+        listMode: 'exclude',
+        collections: [],
+        collectionDefination: [],
+      },
+    ]
   }
 
-  function listAvailbleFunctions() {
-    console.log('Available functions:')
-    console.log('[1] encryptPassword')
-
-    // Receive input from the user
-    const rl = readLine.createInterface({
-      input: process.stdin,
-      output: process.stdout
-    })
-
-
-  }
-
-  listAvailbleFunctions()
+  start(config)
 })()
