@@ -88,7 +88,8 @@ const config = {
       ...
 ```
 
-6. After that, you can run the script by running the following command
+6. After that, you can run the script by running the following command to run the script on DocumentDB
+> ! Recommend to run the script on secondary node to avoid the performance impact on the primary node
 ```bash
 mongosh --tls --tlsAllowInvalidHostnames --retryWrites=false <AWS_DOC_DB_HOSTNAME> --tlsCAFile ./global-bundle.pem --username <USERNAME> -f ./dist/index.js
 ```
