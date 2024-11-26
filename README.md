@@ -13,7 +13,9 @@ It is designed to be run on a local machine that can connect to both AWS Documen
 - [Node.js](https://nodejs.org/en/download/)
 - [`mongosh`](https://docs.mongodb.com/mongodb-shell/install/)
 - Machine that can connect to both AWS DocumentDB and MongoDB Atlas
-- Credentials for both AWS DocumentDB and MongoDB Atlas
+- Database Credentials 
+  - AWS DocumentDB
+  - MongoDB Atlas
 
 ## Installation
 1. Clone the repository
