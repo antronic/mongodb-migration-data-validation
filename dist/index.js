@@ -100,7 +100,7 @@ const getCollections = (_db, dbName) => {
  * @param start Start time
  * @param end End time
  */
-const getDocuments = async (collection, collectionOptions, round = 1, timeField = 'created_at', start = dayjs().toDate(), end = dayjs().toDate()) => {
+const getDocuments = (collection, collectionOptions, round = 1, timeField = 'created_at', start = dayjs().toDate(), end = dayjs().toDate()) => {
     const limit = collectionOptions && collectionOptions.maximumDocumentsPerRound || 1000;
     const pipeline = [];
     if (collectionOptions && collectionOptions.hasTTL) {
@@ -122,7 +122,7 @@ const getDocuments = async (collection, collectionOptions, round = 1, timeField 
     // console.log('pipeline')
     // console.log(pipeline)
     // console.log()
-    const documents = await collection.aggregate(pipeline).toArray();
+    const documents = collection.aggregate(pipeline).toArray();
     return documents;
 };
 
@@ -157,7 +157,7 @@ const hashBigObject = (obj) => {
 //   const excludedDatabases = config.databases.filter(db => db.isExclude)
 // }
 const reports = new Map();
-const start = async (config) => {
+const start = (config) => {
     const excludedDatabases = config.databases
         .filter(db => db.isExclude || config.listMode === 'exclude')
         .map(db => db.name);
@@ -173,7 +173,7 @@ const start = async (config) => {
     /**
      * Load source data from the source cluster (current mongosh)
      */
-    const loadSourceData = async () => {
+    const loadSourceData = () => {
         const dbConfigs = new Map();
         // db = this is the current mongosh
         const sourceDbConn = db;
@@ -254,13 +254,13 @@ const start = async (config) => {
                     console.log(`[${dayjs().format('HH:mm:ss')}]\t${dbName}.${collection} - Retrieving documents...`);
                     const t3 = Date.now();
                     console.log(`[${dayjs().format('HH:mm:ss')}]\t\t [Source] - Retrieving documents...`);
-                    const sourceDocuments = await getDocuments(sourceColl, collOption, round);
+                    const sourceDocuments = getDocuments(sourceColl, collOption, round);
                     console.log(`[${dayjs().format('HH:mm:ss')}]\t\t [Source] - Retrieving documents - Done - [${Date.now() - t3}ms]`);
                     console.log();
                     const t4 = Date.now();
                     console.log(`[${dayjs().format('HH:mm:ss')}]\t\t [Target] - Retrieving documents...`);
                     const targetColl = targetDbConn.getSiblingDB(dbName).getCollection(collection);
-                    const targetDocuments = await getDocuments(targetColl, collOption, round);
+                    const targetDocuments = getDocuments(targetColl, collOption, round);
                     console.log(`[${dayjs().format('HH:mm:ss')}]\t\t [Target] - Retrieving documents - Done - [${Date.now() - t4}ms]`);
                     console.log();
                     ++round;
@@ -350,7 +350,7 @@ const start = async (config) => {
         console.log();
         console.log(reports);
     };
-    await loadSourceData();
+    loadSourceData();
     console.log('\n Process done');
 };
 
