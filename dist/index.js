@@ -128,6 +128,9 @@ const getDocuments = async (collection, collectionOptions, round = 1, timeField 
 
 const hash = (str) => murmurhash.v3(str).toString();
 const hashBigObject = (obj) => {
+    if (typeof obj !== 'object') {
+        return 'not an object';
+    }
     const hashArray = Object.keys(obj)
         // We sort the keys to ensure the hash is consistent
         .sort()
@@ -241,18 +244,20 @@ const start = async (config) => {
                     const t3 = Date.now();
                     console.log(`[${dayjs().format('HH:mm:ss')}]\t\t [Source] - Retrieving documents...`);
                     const sourceDocuments = await getDocuments(sourceColl, collOption, round);
-                    console.log(`[${dayjs().format('HH:mm:ss')}]\t\t [Source] - Retrieving documents - Done - [${Date.now() - t3}]`);
+                    console.log(`[${dayjs().format('HH:mm:ss')}]\t\t [Source] - Retrieving documents - Done - [${Date.now() - t3}ms]`);
                     console.log();
                     const t4 = Date.now();
                     console.log(`[${dayjs().format('HH:mm:ss')}]\t\t [Target] - Retrieving documents...`);
                     const targetColl = targetDbConn.getSiblingDB(dbName).getCollection(collection);
                     const targetDocuments = await getDocuments(targetColl, collOption, round);
-                    console.log(`[${dayjs().format('HH:mm:ss')}]\t\t [Target] - Retrieving documents - Done - [${Date.now() - t4}]`);
+                    console.log(`[${dayjs().format('HH:mm:ss')}]\t\t [Target] - Retrieving documents - Done - [${Date.now() - t4}ms]`);
                     console.log();
                     ++round;
-                    console.log(`[${dayjs().format('HH:mm:ss')}]\t${dbName}.${collection} - Retrieving documents - Done - [${Date.now() - t1}]`);
+                    console.log(`[${dayjs().format('HH:mm:ss')}]\t${dbName}.${collection} - Retrieving documents - Done - [${Date.now() - t1}ms]`);
                     const t2 = Date.now();
                     console.log(`[${dayjs().format('HH:mm:ss')}]\t\tHashing documents...`);
+                    console.log('[DEBUG] sourceDocuments', sourceDocuments);
+                    console.log('[DEBUG] targetDocuments', targetDocuments);
                     const hasedSourceDocs = hashBigObject(sourceDocuments);
                     const hasedTargetDocs = hashBigObject(targetDocuments);
                     console.log(`[${dayjs().format('HH:mm:ss')}]\t\tHased completed - [${Date.now() - t2}]`);
@@ -263,6 +268,7 @@ const start = async (config) => {
                     console.log(`\t\t\tHash: ${hasedSourceDocs}`);
                     console.log(`\t\tTarget Documents: ${targetDocuments.length}`);
                     console.log(`\t\t\tHash: ${hasedTargetDocs}`);
+                    console.log(`\t\tResult: ${hasedSourceDocs === hasedTargetDocs ? 'Match' : 'Mismatch'}`);
                     console.log();
                     currentSourceDocCount += sourceDocuments.length;
                     currentTargetDocCount += targetDocuments.length;
