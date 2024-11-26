@@ -149,6 +149,9 @@ const start = async (config: Validation.ValidationConfig) => {
 
           const t2 = Date.now()
           console.log(`[${dayjs().format('HH:mm:ss')}]\t\tHashing documents...`)
+          console.log('[DEBUG] sourceDocuments', sourceDocuments)
+          console.log('[DEBUG] targetDocuments', targetDocuments)
+
           const hasedSourceDocs = hashBigObject(sourceDocuments)
           const hasedTargetDocs = hashBigObject(targetDocuments)
           console.log(`[${dayjs().format('HH:mm:ss')}]\t\tHased completed - [${Date.now() - t2}]`)
