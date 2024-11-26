@@ -14,9 +14,11 @@ export const hashBigObject = (obj: any): string => {
     .sort()
     .map(key => {
       const value = obj[key]
-      if (value === null || value === undefined) {
-        return `${key}:${value.toString()}`
-
+      if (value === null) {
+        return `${key}:null`
+      }
+      if (value === undefined) {
+        return `${key}:undefined`
       }
 
       return `${key}:${typeof value === 'object' ? hashBigObject(value) : value}`
