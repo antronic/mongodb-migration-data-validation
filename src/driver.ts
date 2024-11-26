@@ -135,17 +135,17 @@ const start = async (config: Validation.ValidationConfig) => {
           const t3 = Date.now()
           console.log(`[${dayjs().format('HH:mm:ss')}]\t\t [Source] - Retrieving documents...`)
           const sourceDocuments = await getDocuments(sourceColl, collOption, round)
-          console.log(`[${dayjs().format('HH:mm:ss')}]\t\t [Source] - Retrieving documents - Done - [${Date.now() - t3}]`)
+          console.log(`[${dayjs().format('HH:mm:ss')}]\t\t [Source] - Retrieving documents - Done - [${Date.now() - t3}ms]`)
 
           console.log()
           const t4 = Date.now()
           console.log(`[${dayjs().format('HH:mm:ss')}]\t\t [Target] - Retrieving documents...`)
           const targetColl = targetDbConn.getSiblingDB(dbName).getCollection(collection)
           const targetDocuments = await getDocuments(targetColl, collOption, round)
-          console.log(`[${dayjs().format('HH:mm:ss')}]\t\t [Target] - Retrieving documents - Done - [${Date.now() - t4}]`)
+          console.log(`[${dayjs().format('HH:mm:ss')}]\t\t [Target] - Retrieving documents - Done - [${Date.now() - t4}ms]`)
           console.log()
           ++round
-          console.log(`[${dayjs().format('HH:mm:ss')}]\t${dbName}.${collection} - Retrieving documents - Done - [${Date.now() - t1}]`)
+          console.log(`[${dayjs().format('HH:mm:ss')}]\t${dbName}.${collection} - Retrieving documents - Done - [${Date.now() - t1}ms]`)
 
           const t2 = Date.now()
           console.log(`[${dayjs().format('HH:mm:ss')}]\t\tHashing documents...`)
