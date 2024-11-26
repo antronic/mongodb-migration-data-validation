@@ -160,6 +160,7 @@ const start = async (config: Validation.ValidationConfig) => {
           console.log(`\t\t\tHash: ${hasedSourceDocs}`)
           console.log(`\t\tTarget Documents: ${targetDocuments.length}`)
           console.log(`\t\t\tHash: ${hasedTargetDocs}`)
+          console.log(`\t\tResult: ${hasedSourceDocs === hasedTargetDocs ? 'Match' : 'Mismatch'}`)
           console.log()
 
           currentSourceDocCount += sourceDocuments.length
