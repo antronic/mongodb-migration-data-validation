@@ -131,14 +131,21 @@ const hashBigObject = (obj) => {
     if (typeof obj !== 'object') {
         return 'not an object';
     }
-    const hashArray = Object.keys(obj)
-        // We sort the keys to ensure the hash is consistent
-        .sort()
-        .map(key => {
-        const value = obj[key];
-        return `${key}:${typeof value === 'object' ? hashBigObject(value) : value}`;
-    });
-    return hash(hashArray.join(''));
+    try {
+        const hashArray = Object.keys(obj)
+            // We sort the keys to ensure the hash is consistent
+            .sort()
+            .map(key => {
+            const value = obj[key];
+            console.log('key', key);
+            return `${key}:${typeof value === 'object' ? hashBigObject(value) : value}`;
+        });
+        return hash(hashArray.join(''));
+    }
+    catch (e) {
+        console.log('error', e.message);
+        return 'error';
+    }
 };
 
 // export const loadConfig = (config: Validation.ValidationConfig) => {
@@ -256,9 +263,9 @@ const start = async (config) => {
                     console.log(`[${dayjs().format('HH:mm:ss')}]\t${dbName}.${collection} - Retrieving documents - Done - [${Date.now() - t1}ms]`);
                     const t2 = Date.now();
                     console.log(`[${dayjs().format('HH:mm:ss')}]\t\tHashing documents...`);
-                    console.log('[DEBUG] sourceDocuments', sourceDocuments);
-                    console.log('[DEBUG] targetDocuments', targetDocuments);
+                    console.log('[DEBUG] sourceDocuments', typeof sourceDocuments);
                     const hasedSourceDocs = hashBigObject(sourceDocuments);
+                    console.log('[DEBUG] targetDocuments', typeof targetDocuments);
                     const hasedTargetDocs = hashBigObject(targetDocuments);
                     console.log(`[${dayjs().format('HH:mm:ss')}]\t\tHased completed - [${Date.now() - t2}]`);
                     // Add the hash to the array
