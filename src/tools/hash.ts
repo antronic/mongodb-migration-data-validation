@@ -9,14 +9,13 @@ export const hashBigObject = (obj: any): string => {
     return 'not an object'
   }
 
-  try {
-    const hashArray = Object.keys(obj)
+  const hashArray = Object.keys(obj)
     // We sort the keys to ensure the hash is consistent
     .sort()
     .map(key => {
       const value = obj[key]
       if (value === null || value === undefined) {
-        return `${key}:${value}`
+        return `${key}:${value.toString()}`
 
       }
 
@@ -24,8 +23,11 @@ export const hashBigObject = (obj: any): string => {
     })
 
     return hash(hashArray.join(''))
-  } catch (e: any) {
-    console.log('error', e.message)
-    return 'error'
-  }
+
+
+  // try {
+  // } catch (e: any) {
+  //   console.log('error', e.message)
+  //   return 'error'
+  // }
 }

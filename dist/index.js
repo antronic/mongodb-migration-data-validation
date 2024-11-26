@@ -131,23 +131,22 @@ const hashBigObject = (obj) => {
     if (typeof obj !== 'object') {
         return 'not an object';
     }
-    try {
-        const hashArray = Object.keys(obj)
-            // We sort the keys to ensure the hash is consistent
-            .sort()
-            .map(key => {
-            const value = obj[key];
-            if (value === null || value === undefined) {
-                return `${key}:${value}`;
-            }
-            return `${key}:${typeof value === 'object' ? hashBigObject(value) : value}`;
-        });
-        return hash(hashArray.join(''));
-    }
-    catch (e) {
-        console.log('error', e.message);
-        return 'error';
-    }
+    const hashArray = Object.keys(obj)
+        // We sort the keys to ensure the hash is consistent
+        .sort()
+        .map(key => {
+        const value = obj[key];
+        if (value === null || value === undefined) {
+            return `${key}:${value.toString()}`;
+        }
+        return `${key}:${typeof value === 'object' ? hashBigObject(value) : value}`;
+    });
+    return hash(hashArray.join(''));
+    // try {
+    // } catch (e: any) {
+    //   console.log('error', e.message)
+    //   return 'error'
+    // }
 };
 
 // export const loadConfig = (config: Validation.ValidationConfig) => {
