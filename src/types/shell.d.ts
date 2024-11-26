@@ -135,7 +135,7 @@ type Collection = {
     explain: ExplainVerbosityLike;
   }): AggregationCursor
   aggregate(pipeline: Document[], options?: AggregateOptions): AggregationCursor
-  aggregate(...stages: Document[]): AggregationCursor
+  aggregate(...stages: Document[]): Document
   bulkWrite(operations: AnyBulkWriteOperation[], options?: BulkWriteOptions): BulkWriteResult
   count(query?: {}, options?: CountOptions): number
   countDocuments(query?: Document, options?: CountDocumentsOptions): number

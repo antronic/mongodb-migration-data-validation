@@ -12,7 +12,7 @@ import { AggregationCursor } from '@mongosh/shell-api'
 
 const reports: Map<string, Validation.DatabaseReport> = new Map()
 
-const start = async (config: Validation.ValidationConfig) => {
+const start = (config: Validation.ValidationConfig) => {
   const excludedDatabases = config.databases
     .filter(db => db.isExclude || config.listMode === 'exclude')
     .map(db => db.name)
@@ -31,7 +31,7 @@ const start = async (config: Validation.ValidationConfig) => {
   /**
    * Load source data from the source cluster (current mongosh)
    */
-  const loadSourceData = async () => {
+  const loadSourceData = () => {
     const dbConfigs = new Map<string, Validation.Database>()
     // db = this is the current mongosh
     const sourceDbConn = db
@@ -134,14 +134,14 @@ const start = async (config: Validation.ValidationConfig) => {
           console.log(`[${dayjs().format('HH:mm:ss')}]\t${dbName}.${collection} - Retrieving documents...`)
           const t3 = Date.now()
           console.log(`[${dayjs().format('HH:mm:ss')}]\t\t [Source] - Retrieving documents...`)
-          const sourceDocuments = await getDocuments(sourceColl, collOption, round)
+          const sourceDocuments = getDocuments(sourceColl, collOption, round)
           console.log(`[${dayjs().format('HH:mm:ss')}]\t\t [Source] - Retrieving documents - Done - [${Date.now() - t3}ms]`)
 
           console.log()
           const t4 = Date.now()
           console.log(`[${dayjs().format('HH:mm:ss')}]\t\t [Target] - Retrieving documents...`)
           const targetColl = targetDbConn.getSiblingDB(dbName).getCollection(collection)
-          const targetDocuments = await getDocuments(targetColl, collOption, round)
+          const targetDocuments = getDocuments(targetColl, collOption, round)
           console.log(`[${dayjs().format('HH:mm:ss')}]\t\t [Target] - Retrieving documents - Done - [${Date.now() - t4}ms]`)
           console.log()
           ++round
@@ -247,7 +247,7 @@ const start = async (config: Validation.ValidationConfig) => {
     console.log(reports)
   }
 
-  await loadSourceData()
+  loadSourceData()
 
   console.log('\n Process done')
 }
