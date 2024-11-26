@@ -57,7 +57,7 @@ export const getCollections = (_db: Database, dbName: string) => {
  * @param start Start time
  * @param end End time
  */
-export const getDocuments = (
+export const getDocuments = async (
   collection: Collection,
   collectionOptions?: Validation.CollectionOptions,
   round: number = 1,
@@ -93,7 +93,7 @@ export const getDocuments = (
   // console.log(pipeline)
   // console.log()
 
-  const documents = collection.aggregate(pipeline).toArray()
+  const documents = await collection.aggregate(pipeline).toArray()
 
   return documents
 }

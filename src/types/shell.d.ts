@@ -1,5 +1,6 @@
 /// reference types="@types/mongodb" />
 import type {
+  AggregationCursor,
   FindAndModifyMethodShellOptions,
   RemoveShellOptions,
 } from '@mongosh/shell-api'
@@ -132,7 +133,7 @@ type Collection = {
   //
   aggregate(pipeline: Document[], options: AggregateOptions & {
     explain: ExplainVerbosityLike;
-  }): Document
+  }): AggregationCursor
   aggregate(pipeline: Document[], options?: AggregateOptions): AggregationCursor
   aggregate(...stages: Document[]): AggregationCursor
   bulkWrite(operations: AnyBulkWriteOperation[], options?: BulkWriteOptions): BulkWriteResult

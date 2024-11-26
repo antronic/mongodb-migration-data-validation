@@ -3,6 +3,7 @@ import { connectTarget } from './modules/connect'
 import { getCollections, getDatabases, getDocuments } from './modules/load-data'
 import { hashBigObject } from './tools/hash'
 import { Validation } from './types/validation'
+import { AggregationCursor } from '@mongosh/shell-api'
 
 // export const loadConfig = (config: Validation.ValidationConfig) => {
 //   const filteredDatabases = config.databases.filter(db => !db.isExclude)
@@ -11,7 +12,7 @@ import { Validation } from './types/validation'
 
 const reports: Map<string, Validation.DatabaseReport> = new Map()
 
-const start = (config: Validation.ValidationConfig) => {
+const start = async (config: Validation.ValidationConfig) => {
   const excludedDatabases = config.databases
     .filter(db => db.isExclude || config.listMode === 'exclude')
     .map(db => db.name)
@@ -30,7 +31,7 @@ const start = (config: Validation.ValidationConfig) => {
   /**
    * Load source data from the source cluster (current mongosh)
    */
-  const loadSourceData = () => {
+  const loadSourceData = async () => {
     const dbConfigs = new Map<string, Validation.Database>()
     // db = this is the current mongosh
     const sourceDbConn = db
@@ -133,14 +134,14 @@ const start = (config: Validation.ValidationConfig) => {
           console.log(`[${dayjs().format('HH:mm:ss')}]\t${dbName}.${collection} - Retrieving documents...`)
           const t3 = Date.now()
           console.log(`[${dayjs().format('HH:mm:ss')}]\t\t [Source] - Retrieving documents...`)
-          const sourceDocuments = getDocuments(sourceColl, collOption, round)
+          const sourceDocuments = await getDocuments(sourceColl, collOption, round)
           console.log(`[${dayjs().format('HH:mm:ss')}]\t\t [Source] - Retrieving documents - Done - [${Date.now() - t3}]`)
 
           console.log()
           const t4 = Date.now()
           console.log(`[${dayjs().format('HH:mm:ss')}]\t\t [Target] - Retrieving documents...`)
           const targetColl = targetDbConn.getSiblingDB(dbName).getCollection(collection)
-          const targetDocuments = getDocuments(targetColl, collOption, round)
+          const targetDocuments = await getDocuments(targetColl, collOption, round)
           console.log(`[${dayjs().format('HH:mm:ss')}]\t\t [Target] - Retrieving documents - Done - [${Date.now() - t4}]`)
           console.log()
           ++round
@@ -242,7 +243,9 @@ const start = (config: Validation.ValidationConfig) => {
     console.log(reports)
   }
 
-  loadSourceData()
+  await loadSourceData()
+
+  console.log('\n Process done')
 }
 
 export default start
