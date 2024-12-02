@@ -104,16 +104,21 @@ const getDocuments = (collection, collectionOptions, round = 1, timeField = 'cre
     const limit = collectionOptions && collectionOptions.maximumDocumentsPerRound || 1000;
     const pipeline = [];
     if (collectionOptions && collectionOptions.hasTTL) {
-        const startDate = start;
+        // const startDate = start
         const expireAfterSeconds = collectionOptions &&
             collectionOptions.hasTTL &&
             collectionOptions.expireAfterSeconds || 0;
-        let endDate = dayjs(end)
+        // let endDate = dayjs(end)
+        //   .add(expireAfterSeconds, 'second')
+        //   .subtract(1, 'hour')
+        //   .toDate()
+        const startDate = dayjs(start)
             .add(expireAfterSeconds, 'second')
-            .subtract(1, 'hour')
+            .subtract(30, 'minutes')
             .toDate();
         const _timeField = collectionOptions && collectionOptions.timeField || timeField;
-        pipeline.push({ $match: { [_timeField]: { $gte: startDate, $lt: endDate } } });
+        // pipeline.push({ $match: { [_timeField]: { $gte: startDate, $lt: endDate } } })
+        pipeline.push({ $match: { [_timeField]: { $gte: startDate } } });
     }
     pipeline.push({ $sort: { _id: 1 } });
     pipeline.push({ $skip: (round - 1) * limit });
