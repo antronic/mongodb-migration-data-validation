@@ -156,7 +156,7 @@ const start = (config: Validation.ValidationConfig) => {
           if (collOption && collOption.hasTTL) {
             // if it is TTL index collection
             // validate from the total count documents instead
-            console.log('\t\t[DEBUG] [TTL index]')
+            console.log('\t\t[DEBUG] [HAS TTL index]')
             sourceHashes.push(sourceDocuments.length.toString())
             targetHashes.push(targetDocuments.length.toString())
 
@@ -168,7 +168,7 @@ const start = (config: Validation.ValidationConfig) => {
             console.log()
           } else {
             // If it not TTL index collection
-            console.log('[DEBUG] NOT TTL index')
+            console.log('[DEBUG] NO TTL index')
             // console.log('[DEBUG] sourceDocuments', typeof sourceDocuments)
             hasedSourceDocs = hashBigObject(sourceDocuments)
             // console.log('[DEBUG] targetDocuments', typeof targetDocuments)

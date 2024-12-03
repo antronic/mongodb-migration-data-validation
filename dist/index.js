@@ -123,10 +123,10 @@ const getDocuments = (collection, collectionOptions, round = 1, timeField = 'cre
     pipeline.push({ $sort: { _id: 1 } });
     pipeline.push({ $skip: (round - 1) * limit });
     pipeline.push({ $limit: limit });
-    // console.log()
-    // console.log('pipeline')
-    // console.log(pipeline)
-    // console.log()
+    console.log();
+    console.log('[DEBUG] pipeline');
+    console.log(pipeline);
+    console.log();
     const documents = collection.aggregate(pipeline).toArray();
     return documents;
 };
@@ -277,7 +277,7 @@ const start = (config) => {
                     if (collOption && collOption.hasTTL) {
                         // if it is TTL index collection
                         // validate from the total count documents instead
-                        console.log('\t\t[DEBUG] [No TTL index]');
+                        console.log('\t\t[DEBUG] [HAS TTL index]');
                         sourceHashes.push(sourceDocuments.length.toString());
                         targetHashes.push(targetDocuments.length.toString());
                         console.log(`\t\tSource Documents: ${sourceDocuments.length}`);
@@ -289,7 +289,7 @@ const start = (config) => {
                     }
                     else {
                         // If it not TTL index collection
-                        console.log('[DEBUG] NOT TTL index');
+                        console.log('[DEBUG] NO TTL index');
                         // console.log('[DEBUG] sourceDocuments', typeof sourceDocuments)
                         hasedSourceDocs = hashBigObject(sourceDocuments);
                         // console.log('[DEBUG] targetDocuments', typeof targetDocuments)

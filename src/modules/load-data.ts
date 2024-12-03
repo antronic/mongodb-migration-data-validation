@@ -94,7 +94,7 @@ export const getDocuments = (
   pipeline.push({ $limit: limit })
 
   console.log()
-  console.log('pipeline')
+  console.log('[DEBUG] pipeline')
   console.log(pipeline)
   console.log()
 
