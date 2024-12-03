@@ -331,7 +331,8 @@ const start = (config) => {
                         console.log(`[${dayjs().format('HH:mm:ss')}]\t${dbName}.${collection} - Source: ${currentSourceDocCount} - Target: ${currentTargetDocCount}`);
                         console.log(`[${dayjs().format('HH:mm:ss')}]\t${dbName}.${collection} - Hash mismatch`);
                         console.log('----------------------------------');
-                        break;
+                        console.log();
+                        // break
                     }
                 }
                 console.log('----------------------------------');
