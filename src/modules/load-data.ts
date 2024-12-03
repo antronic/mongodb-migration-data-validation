@@ -79,8 +79,8 @@ export const getDocuments = (
     //   .subtract(1, 'hour')
     //   .toDate()
     const startDate = dayjs(start)
-      .add(expireAfterSeconds, 'second')
-      .subtract(30, 'minutes')
+      .subtract(expireAfterSeconds, 'second')
+      .add(30, 'minutes')
       .toDate()
 
     const _timeField = collectionOptions && collectionOptions.timeField || timeField
@@ -93,10 +93,10 @@ export const getDocuments = (
   pipeline.push({ $skip: (round - 1) * limit })
   pipeline.push({ $limit: limit })
 
-  console.log()
-  console.log('[DEBUG] pipeline')
-  console.log(pipeline)
-  console.log()
+  // console.log()
+  // console.log('[DEBUG] pipeline')
+  // console.log(pipeline)
+  // console.log()
 
   const documents = collection.aggregate(pipeline).toArray()
 
