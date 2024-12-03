@@ -27,6 +27,7 @@ export namespace Validation {
       expireAfterSeconds: number,
       indexName: string
       maximumDocumentsPerRound?: number
+      disabledHashedMatch?: boolean
     } | {
       hasTTL?: false,
       maximumDocumentsPerRound?: number
