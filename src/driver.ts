@@ -156,7 +156,7 @@ const start = (config: Validation.ValidationConfig) => {
           if (collOption && collOption.hasTTL) {
             // if it is TTL index collection
             // validate from the total count documents instead
-            console.log('\t\t[DEBUG] [No TTL index]')
+            console.log('\t\t[DEBUG] [TTL index]')
             sourceHashes.push(sourceDocuments.length.toString())
             targetHashes.push(targetDocuments.length.toString())
 
