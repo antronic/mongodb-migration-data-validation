@@ -100,7 +100,11 @@ const getCollections = (_db, dbName) => {
  * @param start Start time
  * @param end End time
  */
-const getDocuments = (collection, collectionOptions, round = 1, timeField = 'created_at', start = dayjs().toDate(), end = dayjs().toDate()) => {
+const getDocuments = (collection, pipeline) => {
+    const documents = collection.aggregate(pipeline).toArray();
+    return documents;
+};
+const generateAggregatePipeline = (collectionOptions, round = 1, timeField = 'created_at', start = dayjs().toDate(), end = dayjs().toDate()) => {
     const limit = collectionOptions && collectionOptions.maximumDocumentsPerRound || 1000;
     const pipeline = [];
     if (collectionOptions && collectionOptions.hasTTL) {
@@ -110,14 +114,14 @@ const getDocuments = (collection, collectionOptions, round = 1, timeField = 'cre
             collectionOptions.expireAfterSeconds || 0;
         let endDate = dayjs(end)
             .subtract(5, 'minutes')
-            .set('millisecond', 0)
-            .set('second', 0)
+            // .set('millisecond', 0)
+            // .set('second', 0)
             .toDate();
         const startDate = dayjs(start)
             .subtract(expireAfterSeconds, 'second')
             .add(30, 'minutes')
-            .set('millisecond', 0)
-            .set('second', 0)
+            // .set('millisecond', 0)
+            // .set('second', 0)
             .toDate();
         const _timeField = collectionOptions && collectionOptions.timeField || timeField;
         pipeline.push({ $match: { [_timeField]: { $gte: startDate, $lt: endDate } } });
@@ -126,12 +130,7 @@ const getDocuments = (collection, collectionOptions, round = 1, timeField = 'cre
     pipeline.push({ $sort: { _id: 1 } });
     pipeline.push({ $skip: (round - 1) * limit });
     pipeline.push({ $limit: limit });
-    // console.log()
-    // console.log('[DEBUG] pipeline')
-    // console.log(pipeline)
-    // console.log()
-    const documents = collection.aggregate(pipeline).toArray();
-    return documents;
+    return pipeline;
 };
 
 const hash = (str) => murmurhash.v3(str).toString();
@@ -255,21 +254,23 @@ const start = (config) => {
                 const sourceHashes = [];
                 const targetHashes = [];
                 let mismatchCount = 0;
+                let matchCount = 0;
                 let round = 1;
                 // Get all documents until the run out of documents
                 while (true) {
+                    const aggregatePipeline = generateAggregatePipeline(collOption, round);
                     const t1 = Date.now();
                     const sourceColl = sourceDbConn.getSiblingDB(dbName).getCollection(collection);
                     console.log(`[${dayjs().format('HH:mm:ss')}]\t${dbName}.${collection} - Retrieving documents...`);
                     const t3 = Date.now();
                     console.log(`[${dayjs().format('HH:mm:ss')}]\t\t [Source] - Retrieving documents...`);
-                    const sourceDocuments = getDocuments(sourceColl, collOption, round);
+                    const sourceDocuments = getDocuments(sourceColl, aggregatePipeline);
                     console.log(`[${dayjs().format('HH:mm:ss')}]\t\t [Source] - Retrieving documents - Done - [${Date.now() - t3}ms]`);
                     console.log();
                     const t4 = Date.now();
                     console.log(`[${dayjs().format('HH:mm:ss')}]\t\t [Target] - Retrieving documents...`);
                     const targetColl = targetDbConn.getSiblingDB(dbName).getCollection(collection);
-                    const targetDocuments = getDocuments(targetColl, collOption, round);
+                    const targetDocuments = getDocuments(targetColl, aggregatePipeline);
                     console.log(`[${dayjs().format('HH:mm:ss')}]\t\t [Target] - Retrieving documents - Done - [${Date.now() - t4}ms]`);
                     console.log();
                     ++round;
@@ -350,9 +351,12 @@ const start = (config) => {
                         console.log('----------------------------------');
                         console.log();
                         mismatchCount++;
-                        console.log(`[${dayjs().format('HH:mm:ss')}]\t${dbName}.${collection} - Current mismatch: ${mismatchCount}`);
                         // break
                     }
+                    else {
+                        matchCount++;
+                    }
+                    console.log(`[${dayjs().format('HH:mm:ss')}]\t${dbName}.${collection} - Current mismatch: ${mismatchCount} / match: ${matchCount}`);
                 }
                 console.log('----------------------------------');
                 console.log(`[${dayjs().format('HH:mm:ss')}]\t${dbName}.${collection} - Source: ${currentSourceDocCount} - Target: ${currentTargetDocCount}`);
@@ -362,7 +366,7 @@ const start = (config) => {
                 console.log();
                 console.log(`[${dayjs().format('HH:mm:ss')}]\tSource Hash: ${sourceHash} - Target Hash: ${targetHash}`);
                 console.log(`[${dayjs().format('HH:mm:ss')}]\t${dbName}.${collection} - ${sourceHash === targetHash ? 'Match' : 'Mismatch'}`);
-                console.log(`[${dayjs().format('HH:mm:ss')}]\t${dbName}.${collection} - All mismatch: ${mismatchCount}`);
+                console.log(`[${dayjs().format('HH:mm:ss')}]\t${dbName}.${collection} - All mismatch: ${mismatchCount} / match: ${matchCount} out of ${round - 1} rounds`);
                 const totalTime = Date.now() - tcol1;
                 console.log();
                 console.log(`[${dayjs().format('HH:mm:ss')}]\t${dbName}.${collection} - Done [${totalTime}ms]`);

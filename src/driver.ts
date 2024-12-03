@@ -1,6 +1,6 @@
 import dayjs from 'dayjs'
 import { connectTarget } from './modules/connect'
-import { getCollections, getDatabases, getDocuments } from './modules/load-data'
+import { generateAggregatePipeline, getCollections, getDatabases, getDocuments } from './modules/load-data'
 import { hashBigObject } from './tools/hash'
 import { Validation } from './types/validation'
 import { AggregationCursor } from '@mongosh/shell-api'
@@ -126,24 +126,27 @@ const start = (config: Validation.ValidationConfig) => {
         const targetHashes: string[] = []
 
         let mismatchCount = 0
+        let matchCount = 0
 
         let round = 1
 
         // Get all documents until the run out of documents
         while (true) {
+          const aggregatePipeline = generateAggregatePipeline(collOption, round)
+
           const t1 = Date.now()
           const sourceColl = sourceDbConn.getSiblingDB(dbName).getCollection(collection)
           console.log(`[${dayjs().format('HH:mm:ss')}]\t${dbName}.${collection} - Retrieving documents...`)
           const t3 = Date.now()
           console.log(`[${dayjs().format('HH:mm:ss')}]\t\t [Source] - Retrieving documents...`)
-          const sourceDocuments = getDocuments(sourceColl, collOption, round)
+          const sourceDocuments = getDocuments(sourceColl, aggregatePipeline)
           console.log(`[${dayjs().format('HH:mm:ss')}]\t\t [Source] - Retrieving documents - Done - [${Date.now() - t3}ms]`)
 
           console.log()
           const t4 = Date.now()
           console.log(`[${dayjs().format('HH:mm:ss')}]\t\t [Target] - Retrieving documents...`)
           const targetColl = targetDbConn.getSiblingDB(dbName).getCollection(collection)
-          const targetDocuments = getDocuments(targetColl, collOption, round)
+          const targetDocuments = getDocuments(targetColl, aggregatePipeline)
           console.log(`[${dayjs().format('HH:mm:ss')}]\t\t [Target] - Retrieving documents - Done - [${Date.now() - t4}ms]`)
           console.log()
           ++round
@@ -234,9 +237,11 @@ const start = (config: Validation.ValidationConfig) => {
             console.log('----------------------------------')
             console.log()
             mismatchCount++
-            console.log(`[${dayjs().format('HH:mm:ss')}]\t${dbName}.${collection} - Current mismatch: ${mismatchCount}`)
             // break
+          } else {
+            matchCount++
           }
+          console.log(`[${dayjs().format('HH:mm:ss')}]\t${dbName}.${collection} - Current mismatch: ${mismatchCount} / match: ${matchCount}`)
         }
 
         console.log('----------------------------------')
@@ -248,7 +253,7 @@ const start = (config: Validation.ValidationConfig) => {
         console.log()
         console.log(`[${dayjs().format('HH:mm:ss')}]\tSource Hash: ${sourceHash} - Target Hash: ${targetHash}`)
         console.log(`[${dayjs().format('HH:mm:ss')}]\t${dbName}.${collection} - ${sourceHash === targetHash ? 'Match' : 'Mismatch'}`)
-        console.log(`[${dayjs().format('HH:mm:ss')}]\t${dbName}.${collection} - All mismatch: ${mismatchCount}`)
+        console.log(`[${dayjs().format('HH:mm:ss')}]\t${dbName}.${collection} - All mismatch: ${mismatchCount} / match: ${matchCount} out of ${round - 1} rounds`)
 
         const totalTime = Date.now() - tcol1
         console.log()

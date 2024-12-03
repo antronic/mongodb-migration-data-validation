@@ -59,6 +59,14 @@ export const getCollections = (_db: Database, dbName: string) => {
  */
 export const getDocuments = (
   collection: Collection,
+  pipeline: any[],
+) => {
+  const documents = collection.aggregate(pipeline).toArray()
+
+  return documents
+}
+
+export const generateAggregatePipeline = (
   collectionOptions?: Validation.CollectionOptions,
   round: number = 1,
   timeField: string = 'created_at',
@@ -76,15 +84,15 @@ export const getDocuments = (
       collectionOptions.expireAfterSeconds || 0
     let endDate = dayjs(end)
       .subtract(5, 'minutes')
-      .set('millisecond', 0)
-      .set('second', 0)
+      // .set('millisecond', 0)
+      // .set('second', 0)
       .toDate()
 
     const startDate = dayjs(start)
       .subtract(expireAfterSeconds, 'second')
       .add(30, 'minutes')
-      .set('millisecond', 0)
-      .set('second', 0)
+      // .set('millisecond', 0)
+      // .set('second', 0)
       .toDate()
 
     const _timeField = collectionOptions && collectionOptions.timeField || timeField
@@ -97,14 +105,7 @@ export const getDocuments = (
   pipeline.push({ $skip: (round - 1) * limit })
   pipeline.push({ $limit: limit })
 
-  // console.log()
-  // console.log('[DEBUG] pipeline')
-  // console.log(pipeline)
-  // console.log()
-
-  const documents = collection.aggregate(pipeline).toArray()
-
-  return documents
+  return pipeline
 }
 
 //
