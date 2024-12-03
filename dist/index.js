@@ -122,10 +122,10 @@ const getDocuments = (collection, collectionOptions, round = 1, timeField = 'cre
     pipeline.push({ $sort: { _id: 1 } });
     pipeline.push({ $skip: (round - 1) * limit });
     pipeline.push({ $limit: limit });
-    console.log();
-    console.log('[DEBUG] pipeline');
-    console.log(pipeline);
-    console.log();
+    // console.log()
+    // console.log('[DEBUG] pipeline')
+    // console.log(pipeline)
+    // console.log()
     const documents = collection.aggregate(pipeline).toArray();
     return documents;
 };
@@ -271,15 +271,15 @@ const start = (config) => {
                     ++round;
                     console.log(`[${dayjs().format('HH:mm:ss')}]\t${dbName}.${collection} - Retrieving documents - Done - [${Date.now() - t1}ms]`);
                     const t2 = Date.now();
-                    console.log(`[${dayjs().format('HH:mm:ss')}]\t\tHashing documents...`);
-                    let hasedSourceDocs = '';
-                    let hasedTargetDocs = '';
+                    let hashedSourceDocs = '';
+                    let hashedTargetDocs = '';
                     if (collOption && collOption.hasTTL) {
                         console.log('[DEBUG] [HAS TTL index]');
                         console.log(`[DEBUG]Hased Match enabled: ${collOption.disabledHashedMatch !== true}`);
                         if (collOption.disabledHashedMatch) {
                             // if it is TTL index collection
                             // validate from the total count documents instead
+                            console.log(`[${dayjs().format('HH:mm:ss')}]\t\tCounting documents...`);
                             sourceHashes.push(sourceDocuments.length.toString());
                             targetHashes.push(targetDocuments.length.toString());
                             console.log(`\t\tSource Documents: ${sourceDocuments.length}`);
@@ -290,36 +290,48 @@ const start = (config) => {
                             console.log();
                         }
                         else {
-                            hasedSourceDocs = hashBigObject(sourceDocuments);
-                            hasedTargetDocs = hashBigObject(targetDocuments);
+                            console.log(`[${dayjs().format('HH:mm:ss')}]\t\tHashing documents...`);
+                            hashedSourceDocs = hashBigObject(sourceDocuments);
+                            hashedTargetDocs = hashBigObject(targetDocuments);
                             console.log(`[${dayjs().format('HH:mm:ss')}]\t\tHased completed - [${Date.now() - t2}]`);
                             // Add the hash to the array
-                            sourceHashes.push(hasedSourceDocs);
-                            targetHashes.push(hasedTargetDocs);
+                            sourceHashes.push(hashedSourceDocs);
+                            targetHashes.push(hashedTargetDocs);
+                            console.log();
+                            console.log();
+                            console.log('Source data');
+                            console.log(sourceDocuments[0]);
+                            console.log();
+                            console.log();
+                            console.log('Target data');
+                            console.log(targetDocuments[0]);
+                            console.log();
+                            console.log();
                             console.log(`\t\tSource Documents: ${sourceDocuments.length}`);
-                            console.log(`\t\t\tHash: ${hasedSourceDocs}`);
+                            console.log(`\t\t\tHash: ${hashedSourceDocs}`);
                             console.log(`\t\tTarget Documents: ${targetDocuments.length}`);
-                            console.log(`\t\t\tHash: ${hasedTargetDocs}`);
-                            console.log(`\t\tResult: ${hasedSourceDocs === hasedTargetDocs ? 'Match' : 'Mismatch'}`);
+                            console.log(`\t\t\tHash: ${hashedTargetDocs}`);
+                            console.log(`\t\tResult: ${hashedSourceDocs === hashedTargetDocs ? 'Match' : 'Mismatch'}`);
                             console.log();
                         }
                     }
                     else {
                         // If it not TTL index collection
                         console.log('[DEBUG] NO TTL index');
+                        console.log(`[${dayjs().format('HH:mm:ss')}]\t\tHashing documents...`);
                         // console.log('[DEBUG] sourceDocuments', typeof sourceDocuments)
-                        hasedSourceDocs = hashBigObject(sourceDocuments);
+                        hashedSourceDocs = hashBigObject(sourceDocuments);
                         // console.log('[DEBUG] targetDocuments', typeof targetDocuments)
-                        hasedTargetDocs = hashBigObject(targetDocuments);
+                        hashedTargetDocs = hashBigObject(targetDocuments);
                         console.log(`[${dayjs().format('HH:mm:ss')}]\t\tHased completed - [${Date.now() - t2}]`);
                         // Add the hash to the array
-                        sourceHashes.push(hasedSourceDocs);
-                        targetHashes.push(hasedTargetDocs);
+                        sourceHashes.push(hashedSourceDocs);
+                        targetHashes.push(hashedTargetDocs);
                         console.log(`\t\tSource Documents: ${sourceDocuments.length}`);
-                        console.log(`\t\t\tHash: ${hasedSourceDocs}`);
+                        console.log(`\t\t\tHash: ${hashedSourceDocs}`);
                         console.log(`\t\tTarget Documents: ${targetDocuments.length}`);
-                        console.log(`\t\t\tHash: ${hasedTargetDocs}`);
-                        console.log(`\t\tResult: ${hasedSourceDocs === hasedTargetDocs ? 'Match' : 'Mismatch'}`);
+                        console.log(`\t\t\tHash: ${hashedTargetDocs}`);
+                        console.log(`\t\tResult: ${hashedSourceDocs === hashedTargetDocs ? 'Match' : 'Mismatch'}`);
                         console.log();
                     }
                     currentSourceDocCount += sourceDocuments.length;
@@ -328,7 +340,7 @@ const start = (config) => {
                         console.log(`[DEBUG] Hit the limit of documents: ${sourceDocuments.length} < ${docLimit}`);
                         break;
                     }
-                    if (hasedSourceDocs !== hasedTargetDocs) {
+                    if (hashedSourceDocs !== hashedTargetDocs) {
                         console.log(`[${dayjs().format('HH:mm:ss')}]\t${dbName}.${collection} - Source: ${currentSourceDocCount} - Target: ${currentTargetDocCount}`);
                         console.log(`[${dayjs().format('HH:mm:ss')}]\t${dbName}.${collection} - Hash mismatch`);
                         console.log('----------------------------------');
