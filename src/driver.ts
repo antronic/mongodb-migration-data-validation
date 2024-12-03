@@ -150,21 +150,38 @@ const start = (config: Validation.ValidationConfig) => {
           const t2 = Date.now()
           console.log(`[${dayjs().format('HH:mm:ss')}]\t\tHashing documents...`)
 
-          console.log('[DEBUG] sourceDocuments', typeof sourceDocuments)
-          const hasedSourceDocs = hashBigObject(sourceDocuments)
-          console.log('[DEBUG] targetDocuments', typeof targetDocuments)
-          const hasedTargetDocs = hashBigObject(targetDocuments)
-          console.log(`[${dayjs().format('HH:mm:ss')}]\t\tHased completed - [${Date.now() - t2}]`)
-          // Add the hash to the array
-          sourceHashes.push(hasedSourceDocs)
-          targetHashes.push(hasedTargetDocs)
+          let hasedSourceDocs = ''
+          let hasedTargetDocs = ''
+          // If it not TTL index collection
+          if (!collOption?.hasTTL) {
+            console.log('[DEBUG] sourceDocuments', typeof sourceDocuments)
+            hasedSourceDocs = hashBigObject(sourceDocuments)
+            console.log('[DEBUG] targetDocuments', typeof targetDocuments)
+            hasedTargetDocs = hashBigObject(targetDocuments)
+            console.log(`[${dayjs().format('HH:mm:ss')}]\t\tHased completed - [${Date.now() - t2}]`)
+            // Add the hash to the array
+            sourceHashes.push(hasedSourceDocs)
+            targetHashes.push(hasedTargetDocs)
 
-          console.log(`\t\tSource Documents: ${sourceDocuments.length}`)
-          console.log(`\t\t\tHash: ${hasedSourceDocs}`)
-          console.log(`\t\tTarget Documents: ${targetDocuments.length}`)
-          console.log(`\t\t\tHash: ${hasedTargetDocs}`)
-          console.log(`\t\tResult: ${hasedSourceDocs === hasedTargetDocs ? 'Match' : 'Mismatch'}`)
-          console.log()
+            console.log(`\t\tSource Documents: ${sourceDocuments.length}`)
+            console.log(`\t\t\tHash: ${hasedSourceDocs}`)
+            console.log(`\t\tTarget Documents: ${targetDocuments.length}`)
+            console.log(`\t\t\tHash: ${hasedTargetDocs}`)
+            console.log(`\t\tResult: ${hasedSourceDocs === hasedTargetDocs ? 'Match' : 'Mismatch'}`)
+            console.log()
+          } else {
+            // if it is TTL index collection
+            // validate from the total count documents instead
+            sourceHashes.push(sourceDocuments.length.toString())
+            targetHashes.push(targetDocuments.length.toString())
+
+            console.log(`\t\tSource Documents: ${sourceDocuments.length}`)
+            console.log(`\t\t\tHash: ${sourceDocuments.length}`)
+            console.log(`\t\tTarget Documents: ${targetDocuments.length}`)
+            console.log(`\t\t\tHash: ${targetDocuments.length}`)
+            console.log(`\t\tResult: ${sourceDocuments.length === targetDocuments.length ? 'Match' : 'Mismatch'}`)
+            console.log()
+          }
 
           currentSourceDocCount += sourceDocuments.length
           currentTargetDocCount += targetDocuments.length
