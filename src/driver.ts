@@ -175,10 +175,11 @@ const start = (config: Validation.ValidationConfig) => {
             sourceHashes.push(sourceDocuments.length.toString())
             targetHashes.push(targetDocuments.length.toString())
 
+            console.log('\t\t[DEBUG] [No TTL index]')
             console.log(`\t\tSource Documents: ${sourceDocuments.length}`)
-            console.log(`\t\t\tHash: ${sourceDocuments.length}`)
+            console.log(`\t\t\tCount: ${sourceDocuments.length}`)
             console.log(`\t\tTarget Documents: ${targetDocuments.length}`)
-            console.log(`\t\t\tHash: ${targetDocuments.length}`)
+            console.log(`\t\t\tCount: ${targetDocuments.length}`)
             console.log(`\t\tResult: ${sourceDocuments.length === targetDocuments.length ? 'Match' : 'Mismatch'}`)
             console.log()
           }
