@@ -74,10 +74,9 @@ export const getDocuments = (
     const expireAfterSeconds = collectionOptions &&
       collectionOptions.hasTTL &&
       collectionOptions.expireAfterSeconds || 0
-    // let endDate = dayjs(end)
-    //   .add(expireAfterSeconds, 'second')
-    //   .subtract(1, 'hour')
-    //   .toDate()
+    let endDate = dayjs(end)
+      .subtract(5, 'minutes')
+      .toDate()
     const startDate = dayjs(start)
       .subtract(expireAfterSeconds, 'second')
       .add(30, 'minutes')
@@ -85,8 +84,8 @@ export const getDocuments = (
 
     const _timeField = collectionOptions && collectionOptions.timeField || timeField
 
-    // pipeline.push({ $match: { [_timeField]: { $gte: startDate, $lt: endDate } } })
-    pipeline.push({ $match: { [_timeField]: { $gte: startDate } } })
+    pipeline.push({ $match: { [_timeField]: { $gte: startDate, $lt: endDate } } })
+    // pipeline.push({ $match: { [_timeField]: { $gte: startDate } } })
   }
 
   pipeline.push({ $sort: { _id: 1 } })
