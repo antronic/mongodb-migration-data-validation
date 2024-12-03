@@ -110,10 +110,14 @@ const getDocuments = (collection, collectionOptions, round = 1, timeField = 'cre
             collectionOptions.expireAfterSeconds || 0;
         let endDate = dayjs(end)
             .subtract(5, 'minutes')
+            .set('millisecond', 0)
+            .set('second', 0)
             .toDate();
         const startDate = dayjs(start)
             .subtract(expireAfterSeconds, 'second')
             .add(30, 'minutes')
+            .set('millisecond', 0)
+            .set('second', 0)
             .toDate();
         const _timeField = collectionOptions && collectionOptions.timeField || timeField;
         pipeline.push({ $match: { [_timeField]: { $gte: startDate, $lt: endDate } } });
