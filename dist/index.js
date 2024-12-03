@@ -274,7 +274,7 @@ const start = (config) => {
                     console.log(`[${dayjs().format('HH:mm:ss')}]\t\tHashing documents...`);
                     let hasedSourceDocs = '';
                     let hasedTargetDocs = '';
-                    if (collOption.hasTTL) {
+                    if (collOption && collOption.hasTTL) {
                         // if it is TTL index collection
                         // validate from the total count documents instead
                         console.log('\t\t[DEBUG] [No TTL index]');
