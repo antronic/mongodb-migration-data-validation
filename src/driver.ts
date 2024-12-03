@@ -208,6 +208,7 @@ const start = (config: Validation.ValidationConfig) => {
           currentTargetDocCount += targetDocuments.length
 
           if (sourceDocuments.length < docLimit) {
+            console.log(`[DEBUG] Hit the limit of documents: ${sourceDocuments.length} < ${docLimit}`)
             break
           }
 

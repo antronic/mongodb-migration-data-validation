@@ -324,6 +324,7 @@ const start = (config) => {
                     currentSourceDocCount += sourceDocuments.length;
                     currentTargetDocCount += targetDocuments.length;
                     if (sourceDocuments.length < docLimit) {
+                        console.log(`[DEBUG] Hit the limit of documents: ${sourceDocuments.length} < ${docLimit}`);
                         break;
                     }
                     if (hasedSourceDocs !== hasedTargetDocs) {
