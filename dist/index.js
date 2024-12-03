@@ -122,10 +122,10 @@ const getDocuments = (collection, collectionOptions, round = 1, timeField = 'cre
     pipeline.push({ $sort: { _id: 1 } });
     pipeline.push({ $skip: (round - 1) * limit });
     pipeline.push({ $limit: limit });
-    // console.log()
-    // console.log('[DEBUG] pipeline')
-    // console.log(pipeline)
-    // console.log()
+    console.log();
+    console.log('[DEBUG] pipeline');
+    console.log(pipeline);
+    console.log();
     const documents = collection.aggregate(pipeline).toArray();
     return documents;
 };
@@ -250,6 +250,7 @@ const start = (config) => {
                 let currentTargetDocCount = 0; // Current document count
                 const sourceHashes = [];
                 const targetHashes = [];
+                let mismatchCount = 0;
                 let round = 1;
                 // Get all documents until the run out of documents
                 while (true) {
@@ -332,6 +333,8 @@ const start = (config) => {
                         console.log(`[${dayjs().format('HH:mm:ss')}]\t${dbName}.${collection} - Hash mismatch`);
                         console.log('----------------------------------');
                         console.log();
+                        mismatchCount++;
+                        console.log(`[${dayjs().format('HH:mm:ss')}]\t${dbName}.${collection} - Current mismatch: ${mismatchCount}`);
                         // break
                     }
                 }
@@ -343,6 +346,7 @@ const start = (config) => {
                 console.log();
                 console.log(`[${dayjs().format('HH:mm:ss')}]\tSource Hash: ${sourceHash} - Target Hash: ${targetHash}`);
                 console.log(`[${dayjs().format('HH:mm:ss')}]\t${dbName}.${collection} - ${sourceHash === targetHash ? 'Match' : 'Mismatch'}`);
+                console.log(`[${dayjs().format('HH:mm:ss')}]\t${dbName}.${collection} - All mismatch: ${mismatchCount}`);
                 const totalTime = Date.now() - tcol1;
                 console.log();
                 console.log(`[${dayjs().format('HH:mm:ss')}]\t${dbName}.${collection} - Done [${totalTime}ms]`);

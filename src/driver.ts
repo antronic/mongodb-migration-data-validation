@@ -125,6 +125,8 @@ const start = (config: Validation.ValidationConfig) => {
         const sourceHashes: string[] = []
         const targetHashes: string[] = []
 
+        let mismatchCount = 0
+
         let round = 1
 
         // Get all documents until the run out of documents
@@ -217,6 +219,8 @@ const start = (config: Validation.ValidationConfig) => {
             console.log(`[${dayjs().format('HH:mm:ss')}]\t${dbName}.${collection} - Hash mismatch`)
             console.log('----------------------------------')
             console.log()
+            mismatchCount++
+            console.log(`[${dayjs().format('HH:mm:ss')}]\t${dbName}.${collection} - Current mismatch: ${mismatchCount}`)
             // break
           }
         }
@@ -230,6 +234,7 @@ const start = (config: Validation.ValidationConfig) => {
         console.log()
         console.log(`[${dayjs().format('HH:mm:ss')}]\tSource Hash: ${sourceHash} - Target Hash: ${targetHash}`)
         console.log(`[${dayjs().format('HH:mm:ss')}]\t${dbName}.${collection} - ${sourceHash === targetHash ? 'Match' : 'Mismatch'}`)
+        console.log(`[${dayjs().format('HH:mm:ss')}]\t${dbName}.${collection} - All mismatch: ${mismatchCount}`)
 
         const totalTime = Date.now() - tcol1
         console.log()

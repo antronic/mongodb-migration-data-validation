@@ -92,10 +92,10 @@ export const getDocuments = (
   pipeline.push({ $skip: (round - 1) * limit })
   pipeline.push({ $limit: limit })
 
-  // console.log()
-  // console.log('[DEBUG] pipeline')
-  // console.log(pipeline)
-  // console.log()
+  console.log()
+  console.log('[DEBUG] pipeline')
+  console.log(pipeline)
+  console.log()
 
   const documents = collection.aggregate(pipeline).toArray()
 
