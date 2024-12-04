@@ -180,6 +180,19 @@ const start = (config: Validation.ValidationConfig) => {
           let hashedSourceDocs = ''
           let hashedTargetDocs = ''
 
+          if (debugMode === 'full') {
+            console.log()
+            console.log('==================================================')
+            console.log('Source data - first document')
+            console.log(sourceDocuments[0])
+            console.log()
+            console.log()
+            console.log('Target data - first document')
+            console.log(targetDocuments[0])
+            console.log('==================================================')
+            console.log()
+          }
+
           if (collOption && collOption.hasTTL) {
             isDebug && console.log('\t\t[DEBUG] [HAS TTL index]')
             isDebug && console.log(`\t\t[DEBUG] Hased Match enabled: ${collOption.disabledHashedMatch !== true}`)
@@ -206,19 +219,6 @@ const start = (config: Validation.ValidationConfig) => {
               // Add the hash to the array
               sourceHashes.push(hashedSourceDocs)
               targetHashes.push(hashedTargetDocs)
-
-              if (debugMode === 'full') {
-                console.log()
-                console.log()
-                console.log('Source data - first document')
-                console.log(sourceDocuments[0])
-                console.log()
-                console.log()
-                console.log('Target data - first document')
-                console.log(targetDocuments[0])
-                console.log()
-                console.log()
-              }
 
               console.log(`\t\tSource Documents: ${sourceDocuments.length}`)
               console.log(`\t\t\tHash: ${hashedSourceDocs}`)
