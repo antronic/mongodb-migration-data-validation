@@ -1,20 +1,20 @@
 const config = {
   debug: 'full',
   target: {
-    hostname: 'localhost:29001',
+    hostname: 'secondary_node:27017',
     username: 'observer',
-    encryptedPassword: 'c425c6bec211d2e0c9d37185a4c22ede'
+    encryptedPassword: '<genereated_encrypted_password>'
   },
   listMode: 'include',
   databases: [
     {
       name: 'jirac',
       isExclude: false,
-      listMode: 'exclude',
-      collections: [],
+      listMode: 'include',
+      collections: ['myTTLCollection'],
       collectionDefinition: [
         {
-          name: 'transactions_1',
+          name: 'myTTLCollection',
           options: {
             maximumDocumentsPerRound: 100,
             hasTTL: true,
