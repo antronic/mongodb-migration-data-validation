@@ -388,10 +388,6 @@ const start = (config) => {
                     }
                     currentSourceDocCount += sourceDocuments.length;
                     currentTargetDocCount += targetDocuments.length;
-                    if (sourceDocuments.length < docLimit) {
-                        isDebug && console.log(`[DEBUG] Hit the limit of documents: ${sourceDocuments.length} < ${docLimit}`);
-                        break;
-                    }
                     if (hashedSourceDocs !== hashedTargetDocs) {
                         console.log(`[${dayjs().format('HH:mm:ss')}]\t${dbName}.${collection} - Source: ${currentSourceDocCount} - Target: ${currentTargetDocCount}`);
                         console.log(`[${dayjs().format('HH:mm:ss')}]\t${dbName}.${collection} - Hash mismatch`);
@@ -404,6 +400,10 @@ const start = (config) => {
                         matchCount++;
                     }
                     console.log(`[${dayjs().format('HH:mm:ss')}]\t${dbName}.${collection} - Current mismatch: ${mismatchCount} / match: ${matchCount}`);
+                    if (sourceDocuments.length < docLimit) {
+                        isDebug && console.log(`[DEBUG] Hit the limit of documents: ${sourceDocuments.length} < ${docLimit}`);
+                        break;
+                    }
                 }
                 console.log();
                 console.log('----------------------------------');
