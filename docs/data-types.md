@@ -9,6 +9,7 @@ Including determining the collection detail such as the `TTL Index` and others
 
 | Key | Type | Description | Required | Default |
 | --- | -----| ----------- | -------- | ------- |
+| debug | String | The debug mode to determine if the debug mode is `full` or `info` | No | undefined |
 | target | Object | The target database connection string | Yes | N/A |
 | target.hostname | String | The target database hostname | Yes | N/A |
 | target.username | String | The target database username | Yes | N/A |
