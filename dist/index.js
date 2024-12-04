@@ -135,14 +135,14 @@ const generateAggregatePipeline = (collectionOptions, timeField = 'created_at', 
             this._pipeline = [...this.pipeline];
             this.round = round;
             this._pipeline.push({ $skip: (this.round - 1) * this.limit });
-            console.log();
-            console.log('round', round);
-            console.log('pipeline');
-            console.log(this.pipeline);
-            console.log('###########');
-            console.log('_pipeline');
-            console.log(this._pipeline);
-            console.log();
+            // console.log()
+            // console.log('round', round)
+            // console.log('pipeline')
+            // console.log(this.pipeline)
+            // console.log('###########')
+            // console.log('_pipeline')
+            // console.log(this._pipeline)
+            // console.log()
             return this;
         },
         generate() {
@@ -168,7 +168,13 @@ const hashBigObject = (obj) => {
         if (value === undefined) {
             return `${key}:undefined`;
         }
-        return `${key}:${typeof value === 'object' ? hashBigObject(value) : value}`;
+        // if (typeof value !== 'object') {
+        //   console.log('HASH ENCODED')
+        //   console.log(value)
+        //   console.log('-=-=-=-=-=-=-')
+        //   console.log(encodeURIComponent(value))
+        // }
+        return `${encodeURIComponent(key)}:${typeof value === 'object' ? hashBigObject(value) : encodeURIComponent(value)}`;
     });
     return hash(hashArray.join(''));
     // try {
@@ -414,7 +420,7 @@ const start = (config) => {
                 console.log(`[${dayjs().format('HH:mm:ss')}]\t${dbName}.${collection} - Done [${totalTime}ms]`);
                 console.log('--------------------------------------------------');
                 console.log();
-                // console.log('\t Creating collection report...')
+                console.log('\t Creating collection report...');
                 // Create report
                 const collectionReport = {
                     collectionName: collection,

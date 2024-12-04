@@ -287,7 +287,7 @@ const start = (config: Validation.ValidationConfig) => {
         console.log('--------------------------------------------------')
 
         console.log()
-        // console.log('\t Creating collection report...')
+        console.log('\t Creating collection report...')
 
         // Create report
         const collectionReport: Validation.CollectionReport = {

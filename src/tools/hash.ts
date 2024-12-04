@@ -21,7 +21,14 @@ export const hashBigObject = (obj: any): string => {
         return `${key}:undefined`
       }
 
-      return `${key}:${typeof value === 'object' ? hashBigObject(value) : value}`
+      // if (typeof value !== 'object') {
+      //   console.log('HASH ENCODED')
+      //   console.log(value)
+      //   console.log('-=-=-=-=-=-=-')
+      //   console.log(encodeURIComponent(value))
+      // }
+
+      return `${encodeURIComponent(key)}:${typeof value === 'object' ? hashBigObject(value) : encodeURIComponent(value)}`
     })
 
     return hash(hashArray.join(''))
