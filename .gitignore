@@ -135,4 +135,7 @@ out
 .dump
 .dump/
 
+.reports/*
+
 config.js
+config.qc.js

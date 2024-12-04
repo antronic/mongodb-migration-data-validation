@@ -111,6 +111,17 @@ export namespace Validation {
      */
     databases: Array<Database>,
   }
+
+  type QCValidationConfig = {
+    debug: 'full'
+    target: Connection,
+    listMode: ListMode,
+    // maxDocuments: number
+    /**
+     * Define the datbases to validate
+     */
+    databases: Array<Database>,
+  }
 }
 
 export type DEBUG_MODE = 'full' | 'info'

@@ -2,6 +2,7 @@ import typescript from '@rollup/plugin-typescript'
 import treser from '@rollup/plugin-terser'
 
 export default [
+  // Encryption and decryption tools
   {
     input: 'src/tools/index.ts',
     output: {
@@ -17,6 +18,23 @@ export default [
       treser(),
     ],
   },
+  // QC tool
+  {
+    input: 'src/tools/qc.ts',
+    output: {
+      file: 'dist/tools/qc.js',
+      format: 'cjs',
+      exports: 'auto',
+    },
+    plugins: [
+      typescript({
+        target: "ES2019", //
+        module: "esnext",
+      }),
+      treser(),
+    ],
+  },
+  // Main driver
   {
     input: 'src/index.ts',
     output: {

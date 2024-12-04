@@ -64,8 +64,6 @@ const start = (config: Validation.ValidationConfig) => {
     console.log(sourceDbs)
 
     const targetDbConn = connectTarget(config.target)
-    const targetDbs = getDatabases(targetDbConn)
-    // console.log(targetDbs)
     console.log()
     /**
      * Query data from the source cluster and target cluster
