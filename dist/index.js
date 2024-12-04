@@ -104,33 +104,42 @@ const getDocuments = (collection, pipeline) => {
     const documents = collection.aggregate(pipeline).toArray();
     return documents;
 };
-const generateAggregatePipeline = (collectionOptions, round = 1, timeField = 'created_at', start = dayjs().toDate(), end = dayjs().toDate()) => {
-    const limit = collectionOptions && collectionOptions.maximumDocumentsPerRound || 1000;
+const generateAggregatePipeline = (collectionOptions, timeField = 'created_at', start = dayjs().toDate(), end = dayjs().toDate()) => {
     const pipeline = [];
-    if (collectionOptions && collectionOptions.hasTTL) {
-        // const startDate = start
-        const expireAfterSeconds = collectionOptions &&
-            collectionOptions.hasTTL &&
-            collectionOptions.expireAfterSeconds || 0;
-        let endDate = dayjs(end)
-            .subtract(5, 'minutes')
-            // .set('millisecond', 0)
-            // .set('second', 0)
-            .toDate();
-        const startDate = dayjs(start)
-            .subtract(expireAfterSeconds, 'second')
-            .add(30, 'minutes')
-            // .set('millisecond', 0)
-            // .set('second', 0)
-            .toDate();
-        const _timeField = collectionOptions && collectionOptions.timeField || timeField;
-        pipeline.push({ $match: { [_timeField]: { $gte: startDate, $lt: endDate } } });
-        // pipeline.push({ $match: { [_timeField]: { $gte: startDate } } })
-    }
-    pipeline.push({ $sort: { _id: 1 } });
-    pipeline.push({ $skip: (round - 1) * limit });
-    pipeline.push({ $limit: limit });
-    return pipeline;
+    return {
+        pipeline,
+        round: 0,
+        limit: collectionOptions && collectionOptions.maximumDocumentsPerRound || 1000,
+        initalize() {
+            if (collectionOptions && collectionOptions.hasTTL) {
+                // const startDate = start
+                const expireAfterSeconds = collectionOptions &&
+                    collectionOptions.hasTTL &&
+                    collectionOptions.expireAfterSeconds || 0;
+                let endDate = dayjs(end)
+                    .subtract(10, 'minutes')
+                    .toDate();
+                const startDate = dayjs(start)
+                    .subtract(expireAfterSeconds, 'second')
+                    .add(30, 'minutes')
+                    .toDate();
+                const _timeField = collectionOptions && collectionOptions.timeField || timeField;
+                pipeline.push({ $match: { [_timeField]: { $gte: startDate, $lt: endDate } } });
+                // pipeline.push({ $match: { [_timeField]: { $gte: startDate } } })
+            }
+            pipeline.push({ $sort: { _id: 1 } });
+            return this;
+        },
+        setRound(round) {
+            this.round = round;
+            pipeline.push({ $skip: (this.round - 1) * this.limit });
+            return this;
+        },
+        generate() {
+            pipeline.push({ $limit: this.limit });
+            return pipeline;
+        },
+    };
 };
 
 const hash = (str) => murmurhash.v3(str).toString();
@@ -264,9 +273,12 @@ const start = (config) => {
                 let mismatchCount = 0;
                 let matchCount = 0;
                 let round = 1;
+                const aggregatePipelineGenerator = generateAggregatePipeline(collOption).initalize();
                 // Get all documents until the run out of documents
                 while (true) {
-                    const aggregatePipeline = generateAggregatePipeline(collOption, round);
+                    const aggregatePipeline = aggregatePipelineGenerator
+                        .setRound(round)
+                        .generate();
                     if (debugMode === 'full') {
                         console.log();
                         console.log();
@@ -434,7 +446,7 @@ const start = (config) => {
         console.log(reports);
     };
     loadSourceData();
-    console.log('\n Process done');
+    console.log('\n\t***Process done, and exitting***');
 };
 
 // Command line interface

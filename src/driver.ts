@@ -139,9 +139,13 @@ const start = (config: Validation.ValidationConfig) => {
 
         let round = 1
 
+        const aggregatePipelineGenerator = generateAggregatePipeline(collOption).initalize()
         // Get all documents until the run out of documents
         while (true) {
-          const aggregatePipeline = generateAggregatePipeline(collOption, round)
+
+          const aggregatePipeline = aggregatePipelineGenerator
+            .setRound(round)
+            .generate()
 
           if (debugMode === 'full') {
             console.log()
@@ -332,7 +336,7 @@ const start = (config: Validation.ValidationConfig) => {
 
   loadSourceData()
 
-  console.log('\n Process done')
+  console.log('\n\t***Process done, and exitting***')
 }
 
 export default start

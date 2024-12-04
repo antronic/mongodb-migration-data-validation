@@ -68,44 +68,52 @@ export const getDocuments = (
 
 export const generateAggregatePipeline = (
   collectionOptions?: Validation.CollectionOptions,
-  round: number = 1,
   timeField: string = 'created_at',
   start: Date = dayjs().toDate(),
   end: Date  = dayjs().toDate(),
 ) => {
-  const limit = collectionOptions && collectionOptions.maximumDocumentsPerRound || 1000
-
   const pipeline: any[] = []
+  return {
+    pipeline,
+    round: 0,
+    limit: collectionOptions && collectionOptions.maximumDocumentsPerRound || 1000,
 
-  if (collectionOptions && collectionOptions.hasTTL) {
-    // const startDate = start
-    const expireAfterSeconds = collectionOptions &&
-      collectionOptions.hasTTL &&
-      collectionOptions.expireAfterSeconds || 0
-    let endDate = dayjs(end)
-      .subtract(5, 'minutes')
-      // .set('millisecond', 0)
-      // .set('second', 0)
-      .toDate()
+    initalize() {
+      if (collectionOptions && collectionOptions.hasTTL) {
+        // const startDate = start
+        const expireAfterSeconds = collectionOptions &&
+          collectionOptions.hasTTL &&
+          collectionOptions.expireAfterSeconds || 0
+        let endDate = dayjs(end)
+          .subtract(10, 'minutes')
+          .toDate()
 
-    const startDate = dayjs(start)
-      .subtract(expireAfterSeconds, 'second')
-      .add(30, 'minutes')
-      // .set('millisecond', 0)
-      // .set('second', 0)
-      .toDate()
+        const startDate = dayjs(start)
+          .subtract(expireAfterSeconds, 'second')
+          .add(30, 'minutes')
+          .toDate()
 
-    const _timeField = collectionOptions && collectionOptions.timeField || timeField
+        const _timeField = collectionOptions && collectionOptions.timeField || timeField
 
-    pipeline.push({ $match: { [_timeField]: { $gte: startDate, $lt: endDate } } })
-    // pipeline.push({ $match: { [_timeField]: { $gte: startDate } } })
+        pipeline.push({ $match: { [_timeField]: { $gte: startDate, $lt: endDate } } })
+        // pipeline.push({ $match: { [_timeField]: { $gte: startDate } } })
+      }
+
+      pipeline.push({ $sort: { _id: 1 } })
+      return this
+    },
+    setRound(round: number) {
+      this.round = round
+
+      pipeline.push({ $skip: (this.round - 1) * this.limit })
+      return this
+    },
+    generate() {
+      pipeline.push({ $limit: this.limit })
+
+      return pipeline
+    },
   }
-
-  pipeline.push({ $sort: { _id: 1 } })
-  pipeline.push({ $skip: (round - 1) * limit })
-  pipeline.push({ $limit: limit })
-
-  return pipeline
 }
 
 //
