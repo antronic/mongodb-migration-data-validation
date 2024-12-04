@@ -72,9 +72,9 @@ export const generateAggregatePipeline = (
   start: Date = dayjs().toDate(),
   end: Date  = dayjs().toDate(),
 ) => {
-  const pipeline: any[] = []
   return {
-    pipeline,
+    pipeline: [] as any[],
+    _pipeline: [] as any[],
     round: 0,
     limit: collectionOptions && collectionOptions.maximumDocumentsPerRound || 1000,
 
@@ -95,23 +95,25 @@ export const generateAggregatePipeline = (
 
         const _timeField = collectionOptions && collectionOptions.timeField || timeField
 
-        pipeline.push({ $match: { [_timeField]: { $gte: startDate, $lt: endDate } } })
+        this.pipeline.push({ $match: { [_timeField]: { $gte: startDate, $lt: endDate } } })
         // pipeline.push({ $match: { [_timeField]: { $gte: startDate } } })
       }
 
-      pipeline.push({ $sort: { _id: 1 } })
+      this.pipeline.push({ $sort: { _id: 1 } })
+      this._pipeline = this.pipeline
       return this
     },
     setRound(round: number) {
+      this._pipeline = this.pipeline
       this.round = round
 
-      pipeline.push({ $skip: (this.round - 1) * this.limit })
+      this._pipeline.push({ $skip: (this.round - 1) * this.limit })
       return this
     },
     generate() {
-      pipeline.push({ $limit: this.limit })
+      this._pipeline.push({ $limit: this.limit })
 
-      return pipeline
+      return this._pipeline
     },
   }
 }
