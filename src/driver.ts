@@ -13,6 +13,15 @@ import { AggregationCursor } from '@mongosh/shell-api'
 const reports: Map<string, Validation.DatabaseReport> = new Map()
 
 const start = (config: Validation.ValidationConfig) => {
+  const isDebug = ['full', 'info'].includes(config.debug!)
+  const debugMode = config.debug
+
+  if (isDebug) {
+    console.log('** Debug mode enabled')
+  } else {
+    console.log('-- Debug mode disabled')
+  }
+
   const excludedDatabases = config.databases
     .filter(db => db.isExclude || config.listMode === 'exclude')
     .map(db => db.name)
@@ -134,6 +143,16 @@ const start = (config: Validation.ValidationConfig) => {
         while (true) {
           const aggregatePipeline = generateAggregatePipeline(collOption, round)
 
+          if (debugMode === 'full') {
+            console.log()
+            console.log()
+            console.log('----------------- AGGEGRATE PIPELINE -----------------')
+            console.log()
+            console.log(aggregatePipeline)
+            console.log()
+            console.log()
+          }
+
           const t1 = Date.now()
           const sourceColl = sourceDbConn.getSiblingDB(dbName).getCollection(collection)
           console.log(`[${dayjs().format('HH:mm:ss')}]\t${dbName}.${collection} - Retrieving documents...`)
@@ -158,8 +177,8 @@ const start = (config: Validation.ValidationConfig) => {
           let hashedTargetDocs = ''
 
           if (collOption && collOption.hasTTL) {
-            console.log('[DEBUG] [HAS TTL index]')
-            console.log(`[DEBUG]Hased Match enabled: ${collOption.disabledHashedMatch !== true}`)
+            isDebug && console.log('\t\t[DEBUG] [HAS TTL index]')
+            isDebug && console.log(`\t\t[DEBUG] Hased Match enabled: ${collOption.disabledHashedMatch !== true}`)
 
             if (collOption.disabledHashedMatch) {
               // if it is TTL index collection
@@ -204,7 +223,7 @@ const start = (config: Validation.ValidationConfig) => {
             }
           } else {
             // If it not TTL index collection
-            console.log('[DEBUG] NO TTL index')
+            isDebug && console.log('[DEBUG] NO TTL index')
             console.log(`[${dayjs().format('HH:mm:ss')}]\t\tHashing documents...`)
             // console.log('[DEBUG] sourceDocuments', typeof sourceDocuments)
             hashedSourceDocs = hashBigObject(sourceDocuments)
@@ -227,7 +246,7 @@ const start = (config: Validation.ValidationConfig) => {
           currentTargetDocCount += targetDocuments.length
 
           if (sourceDocuments.length < docLimit) {
-            console.log(`[DEBUG] Hit the limit of documents: ${sourceDocuments.length} < ${docLimit}`)
+            isDebug && console.log(`[DEBUG] Hit the limit of documents: ${sourceDocuments.length} < ${docLimit}`)
             break
           }
 

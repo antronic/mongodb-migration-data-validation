@@ -100,10 +100,10 @@ export namespace Validation {
     isValid: boolean
     collections: CollectionReport[]
   }
-
   // =========================
   // ValidationConfig
   type ValidationConfig = {
+    debug?: DEBUG_MODE
     target: Connection,
     listMode: ListMode,
     /**
@@ -112,5 +112,7 @@ export namespace Validation {
     databases: Array<Database>,
   }
 }
+
+export type DEBUG_MODE = 'full' | 'info'
 
 export {}

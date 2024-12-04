@@ -1,4 +1,5 @@
 const config = {
+  debug: 'full',
   target: {
     hostname: 'localhost:29001',
     username: 'observer',

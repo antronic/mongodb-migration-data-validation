@@ -165,6 +165,14 @@ const hashBigObject = (obj) => {
 // }
 const reports = new Map();
 const start = (config) => {
+    const isDebug = ['full', 'info'].includes(config.debug);
+    const debugMode = config.debug;
+    if (isDebug) {
+        console.log('** Debug mode enabled');
+    }
+    else {
+        console.log('-- Debug mode disabled');
+    }
     const excludedDatabases = config.databases
         .filter(db => db.isExclude || config.listMode === 'exclude')
         .map(db => db.name);
@@ -259,6 +267,15 @@ const start = (config) => {
                 // Get all documents until the run out of documents
                 while (true) {
                     const aggregatePipeline = generateAggregatePipeline(collOption, round);
+                    if (debugMode === 'full') {
+                        console.log();
+                        console.log();
+                        console.log('----------------- AGGEGRATE PIPELINE -----------------');
+                        console.log();
+                        console.log(aggregatePipeline);
+                        console.log();
+                        console.log();
+                    }
                     const t1 = Date.now();
                     const sourceColl = sourceDbConn.getSiblingDB(dbName).getCollection(collection);
                     console.log(`[${dayjs().format('HH:mm:ss')}]\t${dbName}.${collection} - Retrieving documents...`);
@@ -279,8 +296,8 @@ const start = (config) => {
                     let hashedSourceDocs = '';
                     let hashedTargetDocs = '';
                     if (collOption && collOption.hasTTL) {
-                        console.log('[DEBUG] [HAS TTL index]');
-                        console.log(`[DEBUG]Hased Match enabled: ${collOption.disabledHashedMatch !== true}`);
+                        isDebug && console.log('\t\t[DEBUG] [HAS TTL index]');
+                        isDebug && console.log(`\t\t[DEBUG] Hased Match enabled: ${collOption.disabledHashedMatch !== true}`);
                         if (collOption.disabledHashedMatch) {
                             // if it is TTL index collection
                             // validate from the total count documents instead
@@ -322,7 +339,7 @@ const start = (config) => {
                     }
                     else {
                         // If it not TTL index collection
-                        console.log('[DEBUG] NO TTL index');
+                        isDebug && console.log('[DEBUG] NO TTL index');
                         console.log(`[${dayjs().format('HH:mm:ss')}]\t\tHashing documents...`);
                         // console.log('[DEBUG] sourceDocuments', typeof sourceDocuments)
                         hashedSourceDocs = hashBigObject(sourceDocuments);
@@ -342,7 +359,7 @@ const start = (config) => {
                     currentSourceDocCount += sourceDocuments.length;
                     currentTargetDocCount += targetDocuments.length;
                     if (sourceDocuments.length < docLimit) {
-                        console.log(`[DEBUG] Hit the limit of documents: ${sourceDocuments.length} < ${docLimit}`);
+                        isDebug && console.log(`[DEBUG] Hit the limit of documents: ${sourceDocuments.length} < ${docLimit}`);
                         break;
                     }
                     if (hashedSourceDocs !== hashedTargetDocs) {
