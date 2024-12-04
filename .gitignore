@@ -131,3 +131,5 @@ out
 
 # hidden directory storing certifcates
 .cert
+
+config.js
