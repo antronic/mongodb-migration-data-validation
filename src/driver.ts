@@ -207,16 +207,18 @@ const start = (config: Validation.ValidationConfig) => {
               sourceHashes.push(hashedSourceDocs)
               targetHashes.push(hashedTargetDocs)
 
-              // console.log()
-              // console.log()
-              // console.log('Source data')
-              // console.log(sourceDocuments[0])
-              // console.log()
-              // console.log()
-              // console.log('Target data')
-              // console.log(targetDocuments[0])
-              // console.log()
-              // console.log()
+              if (debugMode === 'full') {
+                console.log()
+                console.log()
+                console.log('Source data - first document')
+                console.log(sourceDocuments[0])
+                console.log()
+                console.log()
+                console.log('Target data - first document')
+                console.log(targetDocuments[0])
+                console.log()
+                console.log()
+              }
 
               console.log(`\t\tSource Documents: ${sourceDocuments.length}`)
               console.log(`\t\t\tHash: ${hashedSourceDocs}`)
