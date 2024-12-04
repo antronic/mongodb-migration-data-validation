@@ -269,6 +269,7 @@ const start = (config: Validation.ValidationConfig) => {
           console.log(`[${dayjs().format('HH:mm:ss')}]\t${dbName}.${collection} - Current mismatch: ${mismatchCount} / match: ${matchCount}`)
         }
 
+        console.log()
         console.log('----------------------------------')
         console.log(`[${dayjs().format('HH:mm:ss')}]\t${dbName}.${collection} - Source: ${currentSourceDocCount} - Target: ${currentTargetDocCount}`)
 
@@ -286,7 +287,7 @@ const start = (config: Validation.ValidationConfig) => {
         console.log('--------------------------------------------------')
 
         console.log()
-        console.log('\t Creating collection report...')
+        // console.log('\t Creating collection report...')
 
         // Create report
         const collectionReport: Validation.CollectionReport = {

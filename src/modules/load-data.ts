@@ -100,14 +100,23 @@ export const generateAggregatePipeline = (
       }
 
       this.pipeline.push({ $sort: { _id: 1 } })
-      this._pipeline = this.pipeline
+      this._pipeline = [...this.pipeline]
       return this
     },
     setRound(round: number) {
-      this._pipeline = this.pipeline
+      this._pipeline = [...this.pipeline]
       this.round = round
-
       this._pipeline.push({ $skip: (this.round - 1) * this.limit })
+
+      // console.log()
+      // console.log('round', round)
+      // console.log('pipeline')
+      // console.log(this.pipeline)
+      // console.log('###########')
+      // console.log('_pipeline')
+      // console.log(this._pipeline)
+      // console.log()
+
       return this
     },
     generate() {
