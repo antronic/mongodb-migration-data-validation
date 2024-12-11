@@ -14,16 +14,16 @@ import fs from 'fs'
  * but this intended to run just only single round
  */
 
-function encrypedData(data: any) {
-  const crypto = require('crypto')
-  const cipher = crypto.createCipheriv('aes-256-cbc', key, iv)
+// function encrypedData(data: any) {
+//   const crypto = require('crypto')
+//   const cipher = crypto.createCipheriv('aes-256-cbc', key, iv)
 
-  const key: Buffer<ArrayBuffer> = ''
+//   const key: Buffer<ArrayBuffer> = ''
 
-  let encrypted = cipher.update(data, 'utf8', 'hex')
-  encrypted += cipher.final('hex')
-  return encrypted
-}
+//   let encrypted = cipher.update(data, 'utf8', 'hex')
+//   encrypted += cipher.final('hex')
+//   return encrypted
+// }
 
 // Command line interface
 (function() {
