@@ -14,6 +14,17 @@ import fs from 'fs'
  * but this intended to run just only single round
  */
 
+function encrypedData(data: any) {
+  const crypto = require('crypto')
+  const cipher = crypto.createCipheriv('aes-256-cbc', key, iv)
+
+  const key: Buffer<ArrayBuffer> = ''
+
+  let encrypted = cipher.update(data, 'utf8', 'hex')
+  encrypted += cipher.final('hex')
+  return encrypted
+}
+
 // Command line interface
 (function() {
   dotenv.config({ override: true })
@@ -29,8 +40,10 @@ import fs from 'fs'
       fs.mkdirSync('./.reports')
     }
 
+    const _data = JSON.stringify(data, null, 2)
+
     // Create report file
-    fs.writeFileSync(`./.reports/${fileName}.json`, JSON.stringify(data, null, 2))
+    fs.writeFileSync(`./.reports/${fileName}.json`, _data)
 
     console.log(`\n\t*** Report file created: ./.reports/${fileName}.json ***`)
   }

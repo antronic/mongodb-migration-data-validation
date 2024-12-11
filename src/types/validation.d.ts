@@ -116,6 +116,10 @@ export namespace Validation {
     debug: 'full'
     target: Connection,
     listMode: ListMode,
+    encryptionConfig: {
+      key: string
+      iv: string
+    }
     // maxDocuments: number
     /**
      * Define the datbases to validate
