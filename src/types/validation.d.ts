@@ -32,7 +32,16 @@ export namespace Validation {
       hasTTL?: false,
       maximumDocumentsPerRound?: number
     }
-  )
+  ) & ({
+    custom?: {
+      /**
+       * Custom validation query
+       *
+       * If the collection has a custom validation query, the default validation query will be ignored
+       */
+      validationAggregation: {}[]
+    }
+  })
 
 
   type Collection = {

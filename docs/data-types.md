@@ -38,6 +38,7 @@ Including determining the collection detail such as the `TTL Index` and others
 | --- | -----| ----------- | -------- | ------- |
 | maximumDocumentsPerRound | Number | The maximum number of documents to validate per round | No | 1000 |
 | hasTTL | Boolean | The flag to determine if the collection has TTL index | No | false |
+| custom | Object | The custom validation configuration | No | undefined |
 
 ** If `hasTTL` is `true`, you need to provide the addtionl configuration fields:
 | Key | Type | Description | Required | Default |
@@ -46,6 +47,10 @@ Including determining the collection detail such as the `TTL Index` and others
 | expireAfterSeconds | Number | The number of seconds to expire the document | Yes | N/A |
 | indexName | String | The TTL index name | Yes | N/A |
 
+** If `custom` is provided, you can provide the custom validation configuration fields:
+| Key | Type | Description | Required | Default |
+| --- | -----| ----------- | -------- | ------- |
+| validationAggregation | Array of [Aggregation Pipeline Stage](https://www.mongodb.com/docs/manual/reference/operator/aggregation-pipeline/#std-label-aggregation-pipeline-operator-reference) | The custom validation aggregation pipeline stage (**NOTE** This pipeline will place before apply the default aggregation pipeline) | Yes | N/A |
 
 <!-- End -->
 [X]: # (end-docs)

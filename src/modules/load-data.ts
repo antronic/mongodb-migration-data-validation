@@ -79,11 +79,19 @@ export const generateAggregatePipeline = (
     limit: collectionOptions && collectionOptions.maximumDocumentsPerRound || 1000,
 
     initalize() {
+      //
+      // Apply custom validation query, if has
+      if (collectionOptions && collectionOptions.custom) {
+        this.pipeline = [...collectionOptions.custom.validationAggregation]
+      }
+      //
+      // If the collection has TTL index
       if (collectionOptions && collectionOptions.hasTTL) {
         // const startDate = start
         const expireAfterSeconds = collectionOptions &&
           collectionOptions.hasTTL &&
           collectionOptions.expireAfterSeconds || 0
+
         let endDate = dayjs(end)
           .subtract(10, 'minutes')
           .toDate()
@@ -96,8 +104,8 @@ export const generateAggregatePipeline = (
         const _timeField = collectionOptions && collectionOptions.timeField || timeField
 
         this.pipeline.push({ $match: { [_timeField]: { $gte: startDate, $lt: endDate } } })
-        // pipeline.push({ $match: { [_timeField]: { $gte: startDate } } })
       }
+
 
       this.pipeline.push({ $sort: { _id: 1 } })
       this._pipeline = [...this.pipeline]
@@ -110,8 +118,8 @@ export const generateAggregatePipeline = (
 
       // console.log()
       // console.log('round', round)
-      // console.log('pipeline')
-      // console.log(this.pipeline)
+      // // console.log('pipeline')
+      // // console.log(this.pipeline)
       // console.log('###########')
       // console.log('_pipeline')
       // console.log(this._pipeline)
