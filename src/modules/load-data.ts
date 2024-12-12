@@ -86,7 +86,7 @@ export const generateAggregatePipeline = (
       }
       //
       // If the collection has TTL index
-      if (collectionOptions && collectionOptions.hasTTL) {
+      if (collectionOptions && collectionOptions.hasTTL && !collectionOptions.skipDefaultValidation) {
         // const startDate = start
         const expireAfterSeconds = collectionOptions &&
           collectionOptions.hasTTL &&
@@ -107,14 +107,18 @@ export const generateAggregatePipeline = (
       }
 
 
-      this.pipeline.push({ $sort: { _id: 1 } })
+      if (!collectionOptions?.skipDefaultValidation) {
+        this.pipeline.push({ $sort: { _id: 1 } })
+      }
       this._pipeline = [...this.pipeline]
       return this
     },
     setRound(round: number) {
       this._pipeline = [...this.pipeline]
       this.round = round
-      this._pipeline.push({ $skip: (this.round - 1) * this.limit })
+      if (!collectionOptions?.skipDefaultValidation) {
+        this._pipeline.push({ $skip: (this.round - 1) * this.limit })
+      }
 
       // console.log()
       // console.log('round', round)
@@ -128,7 +132,9 @@ export const generateAggregatePipeline = (
       return this
     },
     generate() {
-      this._pipeline.push({ $limit: this.limit })
+      if (!collectionOptions?.skipDefaultValidation) {
+        this._pipeline.push({ $limit: this.limit })
+      }
 
       return this._pipeline
     },

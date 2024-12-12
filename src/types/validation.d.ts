@@ -41,6 +41,8 @@ export namespace Validation {
        */
       validationAggregation: {}[]
     }
+  }) & ({
+    skipDefaultValidation?: boolean
   })
 
 

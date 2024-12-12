@@ -21,6 +21,7 @@ const config = {
             timeField: 'created_at',
             expireAfterSeconds: 60 * 60 * 24 * 30,
             indexName: 'created_at_1',
+            skipDefaultValidation: true,
             custom: {
               validationAggregation: [
                 {
