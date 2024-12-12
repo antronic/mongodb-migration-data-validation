@@ -82,6 +82,8 @@ export const generateAggregatePipeline = (
       //
       // Apply custom validation query, if has
       if (collectionOptions && collectionOptions.custom) {
+        console.log('collectionOptions.custom.validationAggregation')
+        console.log(collectionOptions.custom.validationAggregation)
         this.pipeline = [...collectionOptions.custom.validationAggregation]
       }
       //
