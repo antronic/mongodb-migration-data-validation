@@ -17,4 +17,4 @@ function getSourceB64() {
 }
 
 const sourceB64 = getSourceB64()
-console.log('----------------------------------\n\n' + sourceB64)
+console.log('----------------------------------\nResult:\n\n' + sourceB64)
